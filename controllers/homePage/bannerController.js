@@ -1,24 +1,35 @@
-const Banner = require('../../models/homePage/bannerModel');
+import Banner from '../../models/homePage/bannerModel.js';
+import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js'; 
 
-const createBanner = async (req, res) => {
+export const createBanner = async (req, res) => {
   try {
-    const { title, subtitle, image } = req.body;
+    const { title, subtitle } = req.body;
 
-    if (!title || !image) {
+    if (!title || !req.file) {
       return res.status(400).json({ message: 'Title and image are required' });
     }
 
-    const banner = await Banner.create({ title, subtitle, image });
+    // Upload image to Cloudinary
+    const result = await uploadImageToCloudinary(req.file.buffer, 'banners');
+
+    // Save banner with Cloudinary URL
+    const banner = await Banner.create({
+      title,
+      subtitle,
+      image: result.secure_url
+    });
+
     res.status(201).json({
       message: 'Banner created successfully',
       banner
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
 
-const getBanners = async (req, res) => {
+export const getBanners = async (req, res) => {
   try {
     const banners = await Banner.find().sort({ createdAt: -1 });
     res.status(200).json(banners);
@@ -26,5 +37,3 @@ const getBanners = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-module.exports = { createBanner, getBanners };

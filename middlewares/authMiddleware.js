@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-const AdminToken = (req, res, next) => {
+export const AdminToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -17,5 +17,3 @@ const AdminToken = (req, res, next) => {
     res.status(403).json({ message: 'Invalid or expired token' });
   }
 };
-
-module.exports = { AdminToken };

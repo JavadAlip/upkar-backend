@@ -1,12 +1,11 @@
-const express = require('express');
+import express from 'express';
+import { createBanner, getBanners } from '../../controllers/homePage/bannerController.js';
+import { AdminToken } from '../../middlewares/authMiddleware.js';
+import upload from '../../middlewares/upload.js';
+
 const router = express.Router();
-const { createBanner, getBanners } = require('../../controllers/homePage/bannerController');
-const { AdminToken } = require('../../middlewares/authMiddleware');
 
-// /banner
-router.post('/create-banner', AdminToken, createBanner); //✅
-router.get('/get-all-banners', AdminToken, getBanners); //✅
+router.post('/create-banner', AdminToken, upload.single('image'), createBanner);
+router.get('/get-all-banners', AdminToken, getBanners);
 
-module.exports = router;
-
-
+export default router;
