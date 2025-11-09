@@ -37,3 +37,22 @@ export const getBanners = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+export const deleteBanner = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: "Banner ID is required" });
+    }
+    const banner = await Banner.findById(id);
+    if (!banner) {
+      return res.status(404).json({ message: "Banner not found" });
+    }
+    await Banner.deleteOne({ _id: id });
+    res.status(200).json({ message: "Banner deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
