@@ -60,6 +60,9 @@
 
 
 
+
+
+
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -75,17 +78,16 @@ const PORT = process.env.PORT || 5000;
 
 // Allowed origins: local dev + Vercel production
 const allowedOrigins = [
-  'http://localhost:5173', // your local frontend URL
-  'https://upkar-frontend.vercel.app' // production frontend
+  'http://localhost:5173', // local dev
+  'https://upkar-frontend.vercel.app' // production
 ];
 
+// CORS middleware
 app.use(cors({
   origin: function(origin, callback) {
-    // allow requests with no origin (like Postman)
-    if (!origin) return callback(null, true);
+    if (!origin) return callback(null, true); // allow Postman or server-to-server requests
     if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = `The CORS policy for this site does not allow access from the specified Origin.`;
-      return callback(new Error(msg), false);
+      return callback(new Error('CORS not allowed'), false);
     }
     return callback(null, true);
   },
@@ -93,9 +95,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
-
-// Handle preflight requests
-app.options('/*', cors());
 
 app.use(express.json());
 
