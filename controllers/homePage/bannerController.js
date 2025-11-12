@@ -39,6 +39,41 @@ export const getBanners = async (req, res) => {
 };
 
 
+export const updateBanner = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, subtitle } = req.body;
+
+    // Check if banner exists
+    const banner = await Banner.findById(id);
+    if (!banner) {
+      return res.status(404).json({ message: 'Banner not found' });
+    }
+
+    // If new image uploaded → upload to Cloudinary
+    if (req.file) {
+      const result = await uploadImageToCloudinary(req.file.buffer, 'banners');
+      banner.image = result.secure_url;
+    }
+
+    // Update text fields if provided
+    if (title) banner.title = title;
+    if (subtitle) banner.subtitle = subtitle;
+
+    // Save updates
+    await banner.save();
+
+    res.status(200).json({
+      message: 'Banner updated successfully',
+      banner
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 export const deleteBanner = async (req, res) => {
   try {
     const { id } = req.params;
