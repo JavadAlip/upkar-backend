@@ -10,7 +10,7 @@ export const adminLogin = (req, res) => {
     const token = jwt.sign(
       { username: ADMIN_USERNAME },
       process.env.JWT_SECRET,
-      { expiresIn: '1d' }
+      { expiresIn: '3d' }
     );
 
     res.status(200).json({

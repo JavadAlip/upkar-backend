@@ -15,7 +15,7 @@ const projectSchema = new mongoose.Schema({
     required: true,
   },
   bulletPoints: {
-    type: [String], // Array of strings for the 3 points
+    type: [String], 
     required: true,
   },
   boxMessage: {
