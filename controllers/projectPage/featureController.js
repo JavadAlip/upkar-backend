@@ -62,7 +62,6 @@ export const getFeature = async (req, res) => {
 };
 
 
-// Update Feature
 export const updateFeature = async (req, res) => {
   try {
     const { id } = req.params;
@@ -79,22 +78,28 @@ export const updateFeature = async (req, res) => {
       feature.mainImage = result.secure_url;
     }
 
-    // Replace icons if new ones uploaded
-    const icons = [];
-    if (req.files.icon1 && iconTitle1) {
-      const icon1Res = await uploadImageToCloudinary(req.files.icon1[0].buffer, "features/icons");
-      icons.push({ icon: icon1Res.secure_url, iconTitle: iconTitle1 });
-    }
-    if (req.files.icon2 && iconTitle2) {
-      const icon2Res = await uploadImageToCloudinary(req.files.icon2[0].buffer, "features/icons");
-      icons.push({ icon: icon2Res.secure_url, iconTitle: iconTitle2 });
-    }
-    if (req.files.icon3 && iconTitle3) {
-      const icon3Res = await uploadImageToCloudinary(req.files.icon3[0].buffer, "features/icons");
-      icons.push({ icon: icon3Res.secure_url, iconTitle: iconTitle3 });
+    // Merge icons
+    const updatedIcons = [...feature.icons]; // start with existing icons
+
+    for (let i = 1; i <= 3; i++) {
+      const file = req.files[`icon${i}`]?.[0];
+      const title = req.body[`iconTitle${i}`];
+
+      if (file) {
+        // If new file uploaded, replace or add
+        const iconUrl = (await uploadImageToCloudinary(file.buffer, "features/icons")).secure_url;
+        if (updatedIcons[i - 1]) {
+          updatedIcons[i - 1] = { icon: iconUrl, iconTitle: title };
+        } else {
+          updatedIcons.push({ icon: iconUrl, iconTitle: title });
+        }
+      } else if (title && updatedIcons[i - 1]) {
+        // If no new file but title changed, update title
+        updatedIcons[i - 1].iconTitle = title;
+      }
     }
 
-    if (icons.length > 0) feature.icons = icons;
+    feature.icons = updatedIcons;
 
     await feature.save();
     res.status(200).json({ message: "Feature updated successfully", feature });

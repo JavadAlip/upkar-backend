@@ -47,7 +47,7 @@ router.post("/create-plot-layout", AdminToken,
   ]),
   createOrUpdatePlotLayout
 );
-router.get("/get-plot-layout", AdminToken, getPlotLayout);
+router.get("/get-plot-layout", getPlotLayout);
 router.delete("/delete-plot-layout", AdminToken, deletePlotLayout);
 
 //Amenities
