@@ -13,7 +13,7 @@ const router = express.Router();
 
 //projectMain
 router.post('/create-projectmain', AdminToken, upload.array('mainImages', 3), createProject);
-router.get('/get-all-projectmain', AdminToken, getAllProjects);
+router.get('/get-all-projectmain', getAllProjects);
 router.put('/edit-projectmain/:id', AdminToken, upload.array('mainImages', 3), updateProject);
 router.delete('/delete-projectmain/:id', AdminToken, deleteProject);
 
@@ -27,7 +27,7 @@ router.post("/create-feature", AdminToken,
   ]),
   createFeature
 );
-router.get("/get-all-features", AdminToken, getFeature);
+router.get("/get-all-features", getFeature);
 router.put("/edit-feature/:id", AdminToken,
   upload.fields([
     { name: "mainImage", maxCount: 1 },
@@ -58,13 +58,13 @@ router.delete('/delete-amenity/:id', AdminToken, deleteAmenity);
 
 //about projects
 router.post("/create-about-project", AdminToken, createAboutProject);
-router.get("/get-about-project", AdminToken, getAboutProjects);
+router.get("/get-about-project", getAboutProjects);
 router.put("/update-about-project/:id", AdminToken, updateAboutProject);
 router.delete("/delete-about-project/:id", AdminToken, deleteAboutProject);
 
 //project images
 router.post("/create-project-images",AdminToken,upload.array("images"),createProjectImages);
-router.get("/get-all-project-images", AdminToken, getProjectImages);
+router.get("/get-all-project-images", getProjectImages);
 router.put("/edit-project-images/:id",AdminToken,upload.array("images"),updateProjectImages);
 router.delete("/delete-project-images/:id", AdminToken, deleteProjectImages);
 
