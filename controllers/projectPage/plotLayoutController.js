@@ -56,7 +56,6 @@ export const createOrUpdatePlotLayout = async (req, res) => {
         .json({ message: "Plot layout updated successfully", layout: existingLayout });
     }
 
-    // Otherwise → create new
     const layout = await PlotLayout.create({
       mainImage: mainImageUrl,
       icons: uploadedIcons,

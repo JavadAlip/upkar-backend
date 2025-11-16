@@ -10,8 +10,8 @@ const visionMissionSchema = new mongoose.Schema({
   image: { type: String, required: true },
   stats: [
     {
-      number: { type: String, required: true },  // e.g. "50+"
-      label: { type: String, required: true }    // e.g. "Years of Experience"
+      number: { type: String, required: true },  
+      label: { type: String, required: true }    
     }
   ],
   createdAt: { type: Date, default: Date.now }

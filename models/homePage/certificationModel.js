@@ -6,7 +6,7 @@ const certificationSchema = new mongoose.Schema({
     required: true,
   },
   icon: {
-    type: String, // Cloudinary URL
+    type: String, 
     required: true,
   },
 }, { timestamps: true });
