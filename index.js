@@ -9,19 +9,22 @@ dotenv.config();
 import adminRoutes from './routes/adminRoutes.js';
 import homepageRoutes from './routes/homePage/homepageRouter.js';
 import projectpageRoutes from './routes/projectPage/projectpageRouter.js';
+import aboutusRoutes from './routes/aboutUs/aboutusRouter.js';
+import eventsRoutes from './routes/Events/eventspageRouter.js';
+import careersRoutes from './routes/careersPage/careersRouter.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://upkar-frontend.vercel.app' 
+  'https://upkar-frontend.vercel.app'
 ];
 
 // CORS middleware
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true); 
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) === -1) {
       return callback(new Error('CORS not allowed'), false);
     }
@@ -38,6 +41,9 @@ app.use(express.json());
 app.use('/api/admin', adminRoutes);
 app.use('/api/homepage', homepageRoutes);
 app.use('/api/projectpage', projectpageRoutes);
+app.use('/api/aboutuspage', aboutusRoutes);
+app.use('/api/eventspage', eventsRoutes);
+app.use('/api/careerspage', careersRoutes);
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
