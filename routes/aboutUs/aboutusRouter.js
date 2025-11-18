@@ -14,7 +14,7 @@ router.post(
     upload.fields([
         { name: "plotImage", maxCount: 1 },
         { name: "acresImage", maxCount: 1 },
-        { name: "mainImages", maxCount: 3 },
+        { name: "mainImages" },
     ]),
     createAboutMain
 );
@@ -24,7 +24,7 @@ router.put(
     upload.fields([
         { name: "plotImage", maxCount: 1 },
         { name: "acresImage", maxCount: 1 },
-        { name: "mainImages", maxCount: 3 },
+        { name: "mainImages" },
     ]),
     updateAboutMain
 );

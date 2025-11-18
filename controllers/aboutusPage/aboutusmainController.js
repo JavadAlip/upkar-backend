@@ -1,12 +1,10 @@
 import AboutMain from "../../models/aboutusPage/aboutusmainModel.js";
 import { uploadImageToCloudinary } from "../../config/cloudinaryUpload.js";
 
-
 export const createAboutMain = async (req, res) => {
   try {
     const data = req.body;
 
-    // Upload images to Cloudinary
     if (req.files?.plotImage) {
       const plotRes = await uploadImageToCloudinary(req.files.plotImage[0].buffer, "aboutus/plot");
       data.plotImage = plotRes.secure_url;
@@ -27,6 +25,7 @@ export const createAboutMain = async (req, res) => {
     }
 
     const aboutMain = await AboutMain.create(data);
+
     return res.status(201).json({
       success: true,
       message: "About Main created successfully",
@@ -38,7 +37,6 @@ export const createAboutMain = async (req, res) => {
   }
 };
 
-
 export const updateAboutMain = async (req, res) => {
   try {
     const id = req.params.id;
@@ -47,27 +45,34 @@ export const updateAboutMain = async (req, res) => {
     const aboutMain = await AboutMain.findById(id);
     if (!aboutMain) return res.status(404).json({ success: false, message: "About Main not found" });
 
-    // Upload updated images
+    // Update plot image
     if (req.files?.plotImage) {
       const plotRes = await uploadImageToCloudinary(req.files.plotImage[0].buffer, "aboutus/plot");
       aboutMain.plotImage = plotRes.secure_url;
     }
 
+    // Update acres image
     if (req.files?.acresImage) {
       const acresRes = await uploadImageToCloudinary(req.files.acresImage[0].buffer, "aboutus/acres");
       aboutMain.acresImage = acresRes.secure_url;
     }
 
-    if (req.files?.mainImages) {
-      const mainImagesUrls = [];
-      for (const file of req.files.mainImages) {
-        const resCloud = await uploadImageToCloudinary(file.buffer, "aboutus/mainImages");
-        mainImagesUrls.push(resCloud.secure_url);
-      }
-      aboutMain.mainImages = mainImagesUrls;
+    // Handle deleted existing images
+    let deletedImages = data.deletedImages || [];
+    if (!Array.isArray(deletedImages)) deletedImages = [deletedImages]; // if single string
+    if (deletedImages.length) {
+      aboutMain.mainImages = aboutMain.mainImages.filter(img => !deletedImages.includes(img));
     }
 
-    // Update other text fields
+    // Upload new main images
+    if (req.files?.mainImages) {
+      for (const file of req.files.mainImages) {
+        const resCloud = await uploadImageToCloudinary(file.buffer, "aboutus/mainImages");
+        aboutMain.mainImages.push(resCloud.secure_url);
+      }
+    }
+
+    // Update text fields
     const textFields = [
       "heading", "plotNumber", "plotTitle",
       "acresNumber", "acresTitle",
@@ -79,7 +84,7 @@ export const updateAboutMain = async (req, res) => {
 
     await aboutMain.save();
 
-    res.status(200).json({ success: true, message: "About Main updated successfully", aboutMain });
+    return res.status(200).json({ success: true, message: "About Main updated successfully", aboutMain });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ success: false, message: err.message });
