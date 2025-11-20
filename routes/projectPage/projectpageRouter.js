@@ -1,42 +1,12 @@
 import express from "express";
 import { AdminToken } from "../../middlewares/authMiddleware.js";
 import upload from "../../middlewares/upload.js";
-import {
-  createProject,
-  getAllProjects,
-  updateProject,
-  deleteProject,
-} from "../../controllers/projectPage/projectmainController.js";
-import {
-  createFeature,
-  getFeature,
-  updateFeature,
-  deleteFeature,
-} from "../../controllers/projectPage/featureController.js";
-import {
-  createPlotLayout,
-  updatePlotLayout,
-  getPlotLayout,
-  deletePlotLayout,
-} from "../../controllers/projectPage/plotLayoutController.js";
-import {
-  createAmenity,
-  getAmenities,
-  updateAmenity,
-  deleteAmenity,
-} from "../../controllers/projectPage/amenitiesController.js";
-import {
-  createAboutProject,
-  getAboutProjects,
-  updateAboutProject,
-  deleteAboutProject,
-} from "../../controllers/projectPage/aboutProjectController.js";
-import {
-  createProjectImages,
-  getProjectImages,
-  updateProjectImages,
-  deleteProjectImages,
-} from "../../controllers/projectPage/projectImagesController.js";
+import {createProject,getAllProjects,updateProject,deleteProject,} from "../../controllers/projectPage/projectmainController.js";
+import {createFeature,getFeature,updateFeature,deleteFeature,} from "../../controllers/projectPage/featureController.js";
+import {createPlotLayout,updatePlotLayout,getPlotLayout,deletePlotLayout,} from "../../controllers/projectPage/plotLayoutController.js";
+import {createAmenity,getAmenities,updateAmenity,deleteAmenity,} from "../../controllers/projectPage/amenitiesController.js";
+import {createAboutProject,getAboutProjects,updateAboutProject,deleteAboutProject,} from "../../controllers/projectPage/aboutProjectController.js";
+import {createProjectImages,getProjectImages,updateProjectImages,deleteProjectImages,} from "../../controllers/projectPage/projectImagesController.js";
 
 const router = express.Router();
 

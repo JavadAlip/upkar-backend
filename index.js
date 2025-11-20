@@ -12,6 +12,7 @@ import projectpageRoutes from './routes/projectPage/projectpageRouter.js';
 import aboutusRoutes from './routes/aboutUs/aboutusRouter.js';
 import eventsRoutes from './routes/Events/eventspageRouter.js';
 import careersRoutes from './routes/careersPage/careersRouter.js';
+import completedprojectRoutes from './routes/completedProject/completedprjctpageRouter.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -44,6 +45,7 @@ app.use('/api/projectpage', projectpageRoutes);
 app.use('/api/aboutuspage', aboutusRoutes);
 app.use('/api/eventspage', eventsRoutes);
 app.use('/api/careerspage', careersRoutes);
+app.use('/api/completedproject', completedprojectRoutes);
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
