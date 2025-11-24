@@ -4,8 +4,7 @@ import { uploadImageToCloudinary } from "../../config/cloudinaryUpload.js";
 // ------------------- CREATE ARTICLE -------------------
 export const createArticle = async (req, res) => {
   try {
-    const { mainDescription } = req.body; // <-- match model
-
+    const { mainDescription } = req.body; 
     if (!mainDescription) {
       return res.status(400).json({ success: false, message: "mainDescription is required." });
     }

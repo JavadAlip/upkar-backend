@@ -12,6 +12,8 @@ import aboutusRoutes from "./routes/aboutUs/aboutusRouter.js";
 import eventsRoutes from "./routes/Events/eventspageRouter.js";
 import careersRoutes from "./routes/careersPage/careersRouter.js";
 import completedprojectRoutes from "./routes/completedProject/completedprjctpageRouter.js";
+import upcomingprojectRoutes from "./routes/upcomingProject/upcomingprjctpageRouter.js";
+import ongoingprojectRoutes from "./routes/ongoingProject/ongoingprjctpageRouter.js";
 import blogsRoutes from "./routes/BlogPage/blogsRouter.js";
 
 const app = express();
@@ -48,6 +50,8 @@ app.use("/api/aboutuspage", aboutusRoutes);
 app.use("/api/eventspage", eventsRoutes);
 app.use("/api/careerspage", careersRoutes);
 app.use("/api/completedproject", completedprojectRoutes);
+app.use("/api/upcomingproject", upcomingprojectRoutes);
+app.use("/api/ongoingproject", ongoingprojectRoutes);
 app.use("/api/blogspage", blogsRoutes);
 
 // MongoDB Connection
