@@ -4,17 +4,19 @@ import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 // Create or Update Vision & Mission
 export const createOrUpdateVisionMission = async (req, res) => {
   try {
-    const { description, missionText, visionText, stats } = req.body;
+    const { description, missionText, visionText, totalExperience, stats } = req.body;
 
-    // Check required fields
-    if (!description || !missionText || !visionText || !req.file) {
+    // Required fields check
+    if (!description || !missionText || !visionText || !totalExperience) {
       return res.status(400).json({ message: "All required fields must be provided" });
     }
 
-    // Upload image to Cloudinary
-    const result = await uploadImageToCloudinary(req.file.buffer, 'vision-mission');
+    if (!req.file) {
+      return res.status(400).json({ message: "Image is required" });
+    }
 
-    // Parse stats if sent as JSON string
+    // Upload Image
+    const result = await uploadImageToCloudinary(req.file.buffer, 'vision-mission');
     const parsedStats = stats ? JSON.parse(stats) : [];
 
     let visionMission = await VisionMission.findOne();
@@ -23,16 +25,20 @@ export const createOrUpdateVisionMission = async (req, res) => {
       visionMission.description = description;
       visionMission.missionText = missionText;
       visionMission.visionText = visionText;
-      visionMission.image = result.secure_url; // Cloudinary URL
+      visionMission.totalExperience = totalExperience;
+      visionMission.image = result.secure_url;
       visionMission.stats = parsedStats.length ? parsedStats : visionMission.stats;
       await visionMission.save();
+
       return res.status(200).json({ message: "Vision & Mission updated successfully", visionMission });
     }
 
+    // Create New
     visionMission = await VisionMission.create({
       description,
       missionText,
       visionText,
+      totalExperience,
       image: result.secure_url,
       stats: parsedStats
     });
@@ -44,7 +50,7 @@ export const createOrUpdateVisionMission = async (req, res) => {
   }
 };
 
-// Public GET API
+
 export const getVisionMission = async (req, res) => {
   try {
     const visionMission = await VisionMission.findOne();
@@ -55,7 +61,6 @@ export const getVisionMission = async (req, res) => {
   }
 };
 
-// Delete Vision & Mission
 export const deleteVisionMission = async (req, res) => {
   try {
     const visionMission = await VisionMission.findOne();
