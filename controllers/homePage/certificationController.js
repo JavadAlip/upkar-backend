@@ -24,7 +24,40 @@ export const createCertification = async (req, res) => {
   }
 };
 
-// Get All Certifications
+
+export const updateCertification = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { heading } = req.body;
+
+    const certification = await Certification.findById(id);
+    if (!certification) {
+      return res.status(404).json({ message: 'Certification not found' });
+    }
+
+    // Update text fields
+    if (heading) certification.heading = heading;
+
+    // If new icon uploaded
+    if (req.file) {
+      const result = await uploadImageToCloudinary(req.file.buffer, 'certifications');
+      certification.icon = result.secure_url;
+    }
+
+    await certification.save();
+
+    res.status(200).json({ 
+      message: 'Certification updated successfully', 
+      certification 
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 export const getCertifications = async (req, res) => {
   try {
     const certifications = await Certification.find().sort({ createdAt: -1 });
@@ -35,16 +68,16 @@ export const getCertifications = async (req, res) => {
   }
 };
 
-// Delete Certification
+
 export const deleteCertification = async (req, res) => {
   try {
     const { id } = req.params;
-    if (!id) return res.status(400).json({ message: 'Certification ID is required' });
 
     const certification = await Certification.findById(id);
     if (!certification) return res.status(404).json({ message: 'Certification not found' });
 
     await Certification.deleteOne({ _id: id });
+
     res.status(200).json({ message: 'Certification deleted successfully' });
   } catch (error) {
     console.log(error);

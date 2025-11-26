@@ -6,11 +6,10 @@ const certificationSchema = new mongoose.Schema({
     required: true,
   },
   icon: {
-    type: String, 
+    type: String,
     required: true,
   },
 }, { timestamps: true });
 
-const Certification = mongoose.model('Certification', certificationSchema);
+const Certification = mongoose.models.Certification || mongoose.model('Certification', certificationSchema);
 export default Certification;
-    

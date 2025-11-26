@@ -4,7 +4,8 @@ import upload from '../../middlewares/upload.js';
 import { createBanner, getBanners, deleteBanner, updateBanner } from '../../controllers/homePage/bannerController.js';
 import { createOrUpdateVisionMission, getVisionMission, deleteVisionMission } from '../../controllers/homePage/visionMissionController.js';
 import { createProject, getProjects, deleteProject, updateProject } from '../../controllers/homePage/projectController.js';
-import { createCertification, getCertifications, deleteCertification } from '../../controllers/homePage/certificationController.js';
+import { createCertification,updateCertification, getCertifications, deleteCertification } from '../../controllers/homePage/certificationController.js';
+import { createQuote,getAllQuotes, updateQuote, deleteQuote } from '../../controllers/homePage/quoteController.js';
 import { createQuestion, getQuestions, updateQuestion, deleteQuestion } from '../../controllers/homePage/questionController.js';
 import { createAward, getAwards, updateAward, deleteAward } from '../../controllers/homePage/awardController.js';
 
@@ -28,9 +29,16 @@ router.put('/update-project/:id', AdminToken, upload.single('image'), updateProj
 router.delete('/delete-project/:id', AdminToken, deleteProject); 
 
 //certification
-router.post('/create-certificate', AdminToken, upload.single('icon'), createCertification); 
-router.get('/get-all-certificates', getCertifications); 
-router.delete('/delete-certificate/:id', AdminToken, deleteCertification); 
+router.post('/create-certificate', AdminToken, upload.single('icon'), createCertification);
+router.put('/update-certificate/:id', AdminToken, upload.single('icon'), updateCertification);
+router.get('/get-all-certificates', getCertifications);
+router.delete('/delete-certificate/:id', AdminToken, deleteCertification);
+
+// quote
+router.post("/create-quote", AdminToken, createQuote);
+router.get("/get-all-quotes", getAllQuotes);
+router.put("/update-quote/:id", AdminToken, updateQuote);
+router.delete("/delete-quote/:id", AdminToken, deleteQuote);
 
 //qustion-answers
 router.post('/create-qn', AdminToken, createQuestion); 
