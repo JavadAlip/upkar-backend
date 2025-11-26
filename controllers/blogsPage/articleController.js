@@ -1,18 +1,22 @@
 import Article from "../../models/blogPage/articleModel.js";
 import { uploadImageToCloudinary } from "../../config/cloudinaryUpload.js";
 
-// ------------------- CREATE ARTICLE -------------------
+
 export const createArticle = async (req, res) => {
   try {
-    const { mainDescription } = req.body; 
+    const { mainDescription } = req.body;
+
     if (!mainDescription) {
       return res.status(400).json({ success: false, message: "mainDescription is required." });
     }
 
     // MAIN IMAGE
-    let mainImage = null;
+    let mainImage = "";
     if (req.files?.mainImage?.[0]) {
-      const imgRes = await uploadImageToCloudinary(req.files.mainImage[0].buffer, "articles/main");
+      const imgRes = await uploadImageToCloudinary(
+        req.files.mainImage[0].buffer,
+        "articles/main"
+      );
       mainImage = imgRes.secure_url;
     }
 
@@ -22,12 +26,18 @@ export const createArticle = async (req, res) => {
     const subImagesFiles = req.files?.subImages || [];
 
     const subItems = [];
+
     for (let i = 0; i < subHeadings.length; i++) {
-      let subImg = null;
+      let subImg = "";
+
       if (subImagesFiles[i]?.buffer) {
-        const imgRes = await uploadImageToCloudinary(subImagesFiles[i].buffer, "articles/sub");
+        const imgRes = await uploadImageToCloudinary(
+          subImagesFiles[i].buffer,
+          "articles/sub"
+        );
         subImg = imgRes.secure_url;
       }
+
       subItems.push({
         subHeading: subHeadings[i],
         subDescription: subDescriptions[i],
@@ -41,26 +51,38 @@ export const createArticle = async (req, res) => {
       subItems,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Article created successfully",
       data: newArticle,
     });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Create Article Error:", error);
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// ------------------- UPDATE ARTICLE -------------------
+
+
 export const updateArticle = async (req, res) => {
   try {
     const { id } = req.params;
-    const { mainDescription } = req.body; // <-- match model
+
+    const existing = await Article.findById(id);
+    if (!existing)
+      return res.status(404).json({ success: false, message: "Article not found" });
+
+    const { mainDescription } = req.body;
 
     // MAIN IMAGE
-    let mainImage;
+    let mainImage = existing.mainImage;
+
     if (req.files?.mainImage?.[0]) {
-      const imgRes = await uploadImageToCloudinary(req.files.mainImage[0].buffer, "articles/main");
+      const imgRes = await uploadImageToCloudinary(
+        req.files.mainImage[0].buffer,
+        "articles/main"
+      );
       mainImage = imgRes.secure_url;
     }
 
@@ -69,62 +91,90 @@ export const updateArticle = async (req, res) => {
     const subDescriptions = req.body.subDescription || [];
     const subImagesFiles = req.files?.subImages || [];
 
-    const subItems = [];
+    const updatedSubItems = [];
+
     for (let i = 0; i < subHeadings.length; i++) {
-      let subImg = null;
+      let finalSubImage = "";
+
+      // CASE 1 → NEW IMAGE UPLOADED
       if (subImagesFiles[i]?.buffer) {
-        const imgRes = await uploadImageToCloudinary(subImagesFiles[i].buffer, "articles/sub");
-        subImg = imgRes.secure_url;
+        const imgRes = await uploadImageToCloudinary(
+          subImagesFiles[i].buffer,
+          "articles/sub"
+        );
+        finalSubImage = imgRes.secure_url;
       }
-      subItems.push({
+      // CASE 2 → KEEP EXISTING IMAGE
+      else if (
+        existing.subItems[i]?.subImage &&
+        existing.subItems[i].subImage !== "null"
+      ) {
+        finalSubImage = existing.subItems[i].subImage;
+      }
+
+      updatedSubItems.push({
         subHeading: subHeadings[i],
         subDescription: subDescriptions[i],
-        subImage: subImg,
+        subImage: finalSubImage, // ALWAYS a string
       });
     }
 
+    // UPDATE DB
     const updated = await Article.findByIdAndUpdate(
       id,
       {
-        ...(mainImage && { mainImage }),
+        mainImage,
         mainDescription,
-        subItems,
+        subItems: updatedSubItems,
       },
       { new: true }
     );
 
-    if (!updated) return res.status(404).json({ success: false, message: "Article not found" });
-
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Article updated successfully",
       data: updated,
     });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.error("Update Article Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
-// ------------------- GET ALL ARTICLES -------------------
+
 export const getAllArticles = async (req, res) => {
   try {
     const articles = await Article.find().sort({ createdAt: -1 });
-    res.status(200).json({ success: true, data: articles });
+    const cleaned = articles.map((a) => ({
+      ...a._doc,
+      subItems: a.subItems.map((s) => ({
+        ...s._doc,
+        subImage: s.subImage || "",
+      })),
+    }));
+
+    return res.status(200).json({ success: true, data: cleaned });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// ------------------- DELETE ARTICLE -------------------
+
 export const deleteArticle = async (req, res) => {
   try {
     const { id } = req.params;
     const deleted = await Article.findByIdAndDelete(id);
 
-    if (!deleted) return res.status(404).json({ success: false, message: "Article not found" });
+    if (!deleted)
+      return res.status(404).json({ success: false, message: "Article not found" });
 
-    res.status(200).json({ success: true, message: "Article deleted successfully" });
+    return res.status(200).json({ success: true, message: "Article deleted successfully" });
+
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };

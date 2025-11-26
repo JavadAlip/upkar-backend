@@ -35,6 +35,7 @@ router.put(
   ]),
   updateArticle
 );
+
 router.delete("/delete-article/:id", AdminToken, deleteArticle);
 
 
