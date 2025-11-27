@@ -35,13 +35,13 @@
 
 // export default mongoose.model("Article", articleSchema);
 
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const subItemSchema = new mongoose.Schema({
   subImage: {
     type: String,
     required: true,
-    default: ""   
+    default: '',
   },
   subHeading: {
     type: String,
@@ -71,4 +71,4 @@ const articleSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Article", articleSchema);
+export default mongoose.model('Article', articleSchema);

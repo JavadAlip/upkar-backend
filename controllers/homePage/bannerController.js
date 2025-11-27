@@ -1,5 +1,5 @@
 import Banner from '../../models/homePage/bannerModel.js';
-import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js'; 
+import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 
 export const createBanner = async (req, res) => {
   try {
@@ -9,19 +9,17 @@ export const createBanner = async (req, res) => {
       return res.status(400).json({ message: 'Title and image are required' });
     }
 
-    // Upload image to Cloudinary
     const result = await uploadImageToCloudinary(req.file.buffer, 'banners');
 
-    // Save banner with Cloudinary URL
     const banner = await Banner.create({
       title,
       subtitle,
-      image: result.secure_url
+      image: result.secure_url,
     });
 
     res.status(201).json({
       message: 'Banner created successfully',
-      banner
+      banner,
     });
   } catch (error) {
     console.log(error);
@@ -38,34 +36,29 @@ export const getBanners = async (req, res) => {
   }
 };
 
-
 export const updateBanner = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, subtitle } = req.body;
 
-    // Check if banner exists
     const banner = await Banner.findById(id);
     if (!banner) {
       return res.status(404).json({ message: 'Banner not found' });
     }
 
-    // If new image uploaded → upload to Cloudinary
     if (req.file) {
       const result = await uploadImageToCloudinary(req.file.buffer, 'banners');
       banner.image = result.secure_url;
     }
 
-    // Update text fields if provided
     if (title) banner.title = title;
     if (subtitle) banner.subtitle = subtitle;
 
-    // Save updates
     await banner.save();
 
     res.status(200).json({
       message: 'Banner updated successfully',
-      banner
+      banner,
     });
   } catch (error) {
     console.log(error);
@@ -73,19 +66,18 @@ export const updateBanner = async (req, res) => {
   }
 };
 
-
 export const deleteBanner = async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
-      return res.status(400).json({ message: "Banner ID is required" });
+      return res.status(400).json({ message: 'Banner ID is required' });
     }
     const banner = await Banner.findById(id);
     if (!banner) {
-      return res.status(404).json({ message: "Banner not found" });
+      return res.status(404).json({ message: 'Banner not found' });
     }
     await Banner.deleteOne({ _id: id });
-    res.status(200).json({ message: "Banner deleted successfully" });
+    res.status(200).json({ message: 'Banner deleted successfully' });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });

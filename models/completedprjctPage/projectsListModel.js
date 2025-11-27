@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const projectsListSchema = new mongoose.Schema(
   {
@@ -25,4 +25,4 @@ const projectsListSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("ProjectsList", projectsListSchema);
+export default mongoose.model('ProjectsList', projectsListSchema);

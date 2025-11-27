@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const ongoingProjectMainSchema = new mongoose.Schema(
   {
@@ -20,6 +20,8 @@ const ongoingProjectMainSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const OngoingProjectMain = mongoose.models.OngoingProjectMain || mongoose.model("OngoingProjectMain", ongoingProjectMainSchema);
+const OngoingProjectMain =
+  mongoose.models.OngoingProjectMain ||
+  mongoose.model('OngoingProjectMain', ongoingProjectMainSchema);
 
 export default OngoingProjectMain;

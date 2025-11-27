@@ -1,17 +1,22 @@
-import ProjectsList from "../../models/completedprjctPage/projectsListModel.js";
-import { uploadImageToCloudinary } from "../../config/cloudinaryUpload.js";
+import ProjectsList from '../../models/completedprjctPage/projectsListModel.js';
+import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 
 export const createProject = async (req, res) => {
   try {
     let data = req.body;
 
     if (req.file) {
-      const imgRes = await uploadImageToCloudinary(req.file.buffer, "projects/list");
+      const imgRes = await uploadImageToCloudinary(
+        req.file.buffer,
+        'projects/list'
+      );
       data.projectImage = imgRes.secure_url;
     }
 
     if (!data.projectImage) {
-      return res.status(400).json({ success: false, message: "projectImage is required." });
+      return res
+        .status(400)
+        .json({ success: false, message: 'projectImage is required.' });
     }
 
     const newProject = await ProjectsList.create(data);
@@ -36,14 +41,21 @@ export const updateProject = async (req, res) => {
     let data = req.body;
 
     if (req.file) {
-      const imgRes = await uploadImageToCloudinary(req.file.buffer, "projects/list");
+      const imgRes = await uploadImageToCloudinary(
+        req.file.buffer,
+        'projects/list'
+      );
       data.projectImage = imgRes.secure_url;
     }
 
-    const updated = await ProjectsList.findByIdAndUpdate(id, data, { new: true });
+    const updated = await ProjectsList.findByIdAndUpdate(id, data, {
+      new: true,
+    });
 
     if (!updated) {
-      return res.status(404).json({ success: false, message: "Project not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Project not found' });
     }
 
     res.status(200).json({ success: true, data: updated });
@@ -58,10 +70,12 @@ export const deleteProject = async (req, res) => {
     const del = await ProjectsList.findByIdAndDelete(id);
 
     if (!del) {
-      return res.status(404).json({ success: false, message: "Project not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Project not found' });
     }
 
-    res.status(200).json({ success: true, message: "Deleted successfully" });
+    res.status(200).json({ success: true, message: 'Deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

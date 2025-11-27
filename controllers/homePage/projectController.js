@@ -1,19 +1,24 @@
 import Project from '../../models/homePage/projectModel.js';
 import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 
-// Create Project
 export const createProject = async (req, res) => {
   try {
     const { type, heading, description, bulletPoints, boxMessage } = req.body;
 
-    if (!type || !heading || !description || !bulletPoints || !boxMessage || !req.file) {
+    if (
+      !type ||
+      !heading ||
+      !description ||
+      !bulletPoints ||
+      !boxMessage ||
+      !req.file
+    ) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Convert bulletPoints string to array if needed
-    const bulletArray = typeof bulletPoints === 'string' ? bulletPoints.split(',') : bulletPoints;
+    const bulletArray =
+      typeof bulletPoints === 'string' ? bulletPoints.split(',') : bulletPoints;
 
-    // Upload image to Cloudinary
     const result = await uploadImageToCloudinary(req.file.buffer, 'projects');
 
     const project = await Project.create({
@@ -27,7 +32,7 @@ export const createProject = async (req, res) => {
 
     res.status(201).json({
       message: 'Project created successfully',
-      project
+      project,
     });
   } catch (error) {
     console.log(error);
@@ -35,10 +40,9 @@ export const createProject = async (req, res) => {
   }
 };
 
-// Get Projects
 export const getProjects = async (req, res) => {
   try {
-    const { type } = req.query; 
+    const { type } = req.query;
     const filter = type ? { type } : {};
     const projects = await Project.find(filter).sort({ createdAt: -1 });
     res.status(200).json(projects);
@@ -48,13 +52,11 @@ export const getProjects = async (req, res) => {
   }
 };
 
-// Update Project
 export const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) return res.status(400).json({ message: 'Project ID is required' });
 
-    // Detect body type
     const { type, heading, description, bulletPoints, boxMessage } = req.body;
 
     let updatedFields = {};
@@ -70,23 +72,27 @@ export const updateProject = async (req, res) => {
         : bulletPoints.split(',');
     }
 
-    // If image is sent via form-data
-    if (req.file) { 
+    if (req.file) {
       const result = await uploadImageToCloudinary(req.file.buffer, 'projects');
       updatedFields.image = result.secure_url;
     }
 
-    const updatedProject = await Project.findByIdAndUpdate(id, updatedFields, { new: true });
-    if (!updatedProject) return res.status(404).json({ message: 'Project not found' });
+    const updatedProject = await Project.findByIdAndUpdate(id, updatedFields, {
+      new: true,
+    });
+    if (!updatedProject)
+      return res.status(404).json({ message: 'Project not found' });
 
-    res.status(200).json({ message: 'Project updated successfully', project: updatedProject });
+    res.status(200).json({
+      message: 'Project updated successfully',
+      project: updatedProject,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
 
-// Delete Project
 export const deleteProject = async (req, res) => {
   try {
     const { id } = req.params;

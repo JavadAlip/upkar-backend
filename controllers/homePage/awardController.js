@@ -1,7 +1,6 @@
 import Award from '../../models/homePage/awardModel.js';
 import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 
-// Create Award
 export const createAward = async (req, res) => {
   try {
     const { title } = req.body;
@@ -14,7 +13,7 @@ export const createAward = async (req, res) => {
 
     const award = await Award.create({
       title,
-      image: result.secure_url
+      image: result.secure_url,
     });
 
     res.status(201).json({ message: 'Award created successfully', award });
@@ -24,7 +23,6 @@ export const createAward = async (req, res) => {
   }
 };
 
-// Get All Awards
 export const getAwards = async (req, res) => {
   try {
     const awards = await Award.find().sort({ createdAt: -1 });
@@ -35,7 +33,6 @@ export const getAwards = async (req, res) => {
   }
 };
 
-// Update Award
 export const updateAward = async (req, res) => {
   try {
     const { id } = req.params;
@@ -51,17 +48,21 @@ export const updateAward = async (req, res) => {
       updateFields.image = result.secure_url;
     }
 
-    const updatedAward = await Award.findByIdAndUpdate(id, updateFields, { new: true });
-    if (!updatedAward) return res.status(404).json({ message: 'Award not found' });
+    const updatedAward = await Award.findByIdAndUpdate(id, updateFields, {
+      new: true,
+    });
+    if (!updatedAward)
+      return res.status(404).json({ message: 'Award not found' });
 
-    res.status(200).json({ message: 'Award updated successfully', award: updatedAward });
+    res
+      .status(200)
+      .json({ message: 'Award updated successfully', award: updatedAward });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
 
-// Delete Award
 export const deleteAward = async (req, res) => {
   try {
     const { id } = req.params;

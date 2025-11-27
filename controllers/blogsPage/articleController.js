@@ -1,26 +1,25 @@
-import Article from "../../models/blogPage/articleModel.js";
-import { uploadImageToCloudinary } from "../../config/cloudinaryUpload.js";
-
+import Article from '../../models/blogPage/articleModel.js';
+import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 
 export const createArticle = async (req, res) => {
   try {
     const { mainDescription } = req.body;
 
     if (!mainDescription) {
-      return res.status(400).json({ success: false, message: "mainDescription is required." });
+      return res
+        .status(400)
+        .json({ success: false, message: 'mainDescription is required.' });
     }
 
-    // MAIN IMAGE
-    let mainImage = "";
+    let mainImage = '';
     if (req.files?.mainImage?.[0]) {
       const imgRes = await uploadImageToCloudinary(
         req.files.mainImage[0].buffer,
-        "articles/main"
+        'articles/main'
       );
       mainImage = imgRes.secure_url;
     }
 
-    // SUB ITEMS
     const subHeadings = req.body.subHeading || [];
     const subDescriptions = req.body.subDescription || [];
     const subImagesFiles = req.files?.subImages || [];
@@ -28,12 +27,12 @@ export const createArticle = async (req, res) => {
     const subItems = [];
 
     for (let i = 0; i < subHeadings.length; i++) {
-      let subImg = "";
+      let subImg = '';
 
       if (subImagesFiles[i]?.buffer) {
         const imgRes = await uploadImageToCloudinary(
           subImagesFiles[i].buffer,
-          "articles/sub"
+          'articles/sub'
         );
         subImg = imgRes.secure_url;
       }
@@ -53,17 +52,14 @@ export const createArticle = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Article created successfully",
+      message: 'Article created successfully',
       data: newArticle,
     });
-
   } catch (error) {
-    console.error("Create Article Error:", error);
+    console.error('Create Article Error:', error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };
-
-
 
 export const updateArticle = async (req, res) => {
   try {
@@ -71,22 +67,22 @@ export const updateArticle = async (req, res) => {
 
     const existing = await Article.findById(id);
     if (!existing)
-      return res.status(404).json({ success: false, message: "Article not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Article not found' });
 
     const { mainDescription } = req.body;
 
-    // MAIN IMAGE
     let mainImage = existing.mainImage;
 
     if (req.files?.mainImage?.[0]) {
       const imgRes = await uploadImageToCloudinary(
         req.files.mainImage[0].buffer,
-        "articles/main"
+        'articles/main'
       );
       mainImage = imgRes.secure_url;
     }
 
-    // SUB ITEMS
     const subHeadings = req.body.subHeading || [];
     const subDescriptions = req.body.subDescription || [];
     const subImagesFiles = req.files?.subImages || [];
@@ -94,20 +90,17 @@ export const updateArticle = async (req, res) => {
     const updatedSubItems = [];
 
     for (let i = 0; i < subHeadings.length; i++) {
-      let finalSubImage = "";
+      let finalSubImage = '';
 
-      // CASE 1 → NEW IMAGE UPLOADED
       if (subImagesFiles[i]?.buffer) {
         const imgRes = await uploadImageToCloudinary(
           subImagesFiles[i].buffer,
-          "articles/sub"
+          'articles/sub'
         );
         finalSubImage = imgRes.secure_url;
-      }
-      // CASE 2 → KEEP EXISTING IMAGE
-      else if (
+      } else if (
         existing.subItems[i]?.subImage &&
-        existing.subItems[i].subImage !== "null"
+        existing.subItems[i].subImage !== 'null'
       ) {
         finalSubImage = existing.subItems[i].subImage;
       }
@@ -115,11 +108,10 @@ export const updateArticle = async (req, res) => {
       updatedSubItems.push({
         subHeading: subHeadings[i],
         subDescription: subDescriptions[i],
-        subImage: finalSubImage, // ALWAYS a string
+        subImage: finalSubImage,
       });
     }
 
-    // UPDATE DB
     const updated = await Article.findByIdAndUpdate(
       id,
       {
@@ -132,19 +124,17 @@ export const updateArticle = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Article updated successfully",
+      message: 'Article updated successfully',
       data: updated,
     });
-
   } catch (error) {
-    console.error("Update Article Error:", error);
+    console.error('Update Article Error:', error);
     return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
-
 
 export const getAllArticles = async (req, res) => {
   try {
@@ -153,7 +143,7 @@ export const getAllArticles = async (req, res) => {
       ...a._doc,
       subItems: a.subItems.map((s) => ({
         ...s._doc,
-        subImage: s.subImage || "",
+        subImage: s.subImage || '',
       })),
     }));
 
@@ -163,17 +153,19 @@ export const getAllArticles = async (req, res) => {
   }
 };
 
-
 export const deleteArticle = async (req, res) => {
   try {
     const { id } = req.params;
     const deleted = await Article.findByIdAndDelete(id);
 
     if (!deleted)
-      return res.status(404).json({ success: false, message: "Article not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Article not found' });
 
-    return res.status(200).json({ success: true, message: "Article deleted successfully" });
-
+    return res
+      .status(200)
+      .json({ success: true, message: 'Article deleted successfully' });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const completedProjectMainSchema = new mongoose.Schema(
   {
@@ -20,4 +20,7 @@ const completedProjectMainSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("CompletedProjectMain", completedProjectMainSchema);
+export default mongoose.model(
+  'CompletedProjectMain',
+  completedProjectMainSchema
+);

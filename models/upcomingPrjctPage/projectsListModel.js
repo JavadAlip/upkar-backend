@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const upcomingProjectsListSchema = new mongoose.Schema(
   {
@@ -25,6 +25,8 @@ const upcomingProjectsListSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const UpcomingProjectsList = mongoose.models.UpcomingProjectsList || mongoose.model("UpcomingProjectsList", upcomingProjectsListSchema);
+const UpcomingProjectsList =
+  mongoose.models.UpcomingProjectsList ||
+  mongoose.model('UpcomingProjectsList', upcomingProjectsListSchema);
 
 export default UpcomingProjectsList;

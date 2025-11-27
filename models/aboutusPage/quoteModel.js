@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const QuoteSchema = new mongoose.Schema(
   {
@@ -9,6 +9,6 @@ const QuoteSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Quote = mongoose.model("Quote", QuoteSchema);
+const Quote = mongoose.model('Quote', QuoteSchema);
 
 export default Quote;

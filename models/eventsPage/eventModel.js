@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const eventSchema = new mongoose.Schema(
   {
@@ -11,4 +11,4 @@ const eventSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Event", eventSchema);
+export default mongoose.model('Event', eventSchema);

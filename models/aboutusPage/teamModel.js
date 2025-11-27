@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const TeamSchema = new mongoose.Schema(
   {
@@ -9,6 +9,6 @@ const TeamSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Team = mongoose.model("Team", TeamSchema);
+const Team = mongoose.model('Team', TeamSchema);
 
 export default Team;

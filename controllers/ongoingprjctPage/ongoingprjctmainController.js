@@ -1,17 +1,22 @@
-import OngoingProjectMain from "../../models/ongoingPrjctPage/ongoingPrjctMain.js";
-import { uploadImageToCloudinary } from "../../config/cloudinaryUpload.js";
+import OngoingProjectMain from '../../models/ongoingPrjctPage/ongoingPrjctMain.js';
+import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 
 export const createOngoingProjectMain = async (req, res) => {
   try {
     let data = req.body;
 
     if (req.file) {
-      const imgRes = await uploadImageToCloudinary(req.file.buffer, "project/main");
+      const imgRes = await uploadImageToCloudinary(
+        req.file.buffer,
+        'project/main'
+      );
       data.mainImage = imgRes.secure_url;
     }
 
     if (!data.mainImage) {
-      return res.status(400).json({ success: false, message: "mainImage is required." });
+      return res
+        .status(400)
+        .json({ success: false, message: 'mainImage is required.' });
     }
 
     const newProject = await OngoingProjectMain.create(data);
@@ -20,7 +25,6 @@ export const createOngoingProjectMain = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 export const getAllOngoingProjectMain = async (req, res) => {
   try {
@@ -37,14 +41,19 @@ export const updateOngoingProjectMain = async (req, res) => {
     let data = req.body;
 
     if (req.file) {
-      const imgRes = await uploadImageToCloudinary(req.file.buffer, "project/main");
+      const imgRes = await uploadImageToCloudinary(
+        req.file.buffer,
+        'project/main'
+      );
       data.mainImage = imgRes.secure_url;
     }
 
-    const updated = await OngoingProjectMain.findByIdAndUpdate(id, data, { new: true });
+    const updated = await OngoingProjectMain.findByIdAndUpdate(id, data, {
+      new: true,
+    });
 
     if (!updated) {
-      return res.status(404).json({ success: false, message: "Not found" });
+      return res.status(404).json({ success: false, message: 'Not found' });
     }
 
     res.status(200).json({ success: true, data: updated });
@@ -59,10 +68,10 @@ export const deleteOngoingProjectMain = async (req, res) => {
     const del = await OngoingProjectMain.findByIdAndDelete(id);
 
     if (!del) {
-      return res.status(404).json({ success: false, message: "Not found" });
+      return res.status(404).json({ success: false, message: 'Not found' });
     }
 
-    res.status(200).json({ success: true, message: "Deleted successfully" });
+    res.status(200).json({ success: true, message: 'Deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

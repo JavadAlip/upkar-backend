@@ -1,5 +1,5 @@
-import cloudinary from "../config/cloudinaryConfig.js";
-import streamifier from "streamifier";
+import cloudinary from '../config/cloudinaryConfig.js';
+import streamifier from 'streamifier';
 
 export const uploadImageToCloudinary = (fileBuffer, folder) => {
   return new Promise((resolve, reject) => {

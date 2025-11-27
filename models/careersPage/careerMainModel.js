@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const careerMainSchema = new mongoose.Schema(
   {
@@ -10,4 +10,4 @@ const careerMainSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("CareerMain", careerMainSchema);
+export default mongoose.model('CareerMain', careerMainSchema);

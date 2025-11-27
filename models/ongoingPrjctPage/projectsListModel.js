@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const ongoingProjectsListSchema = new mongoose.Schema(
   {
@@ -25,6 +25,8 @@ const ongoingProjectsListSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const OngoingProjectsList = mongoose.models.OngoingProjectsList || mongoose.model("OngoingProjectsList", ongoingProjectsListSchema);
+const OngoingProjectsList =
+  mongoose.models.OngoingProjectsList ||
+  mongoose.model('OngoingProjectsList', ongoingProjectsListSchema);
 
 export default OngoingProjectsList;

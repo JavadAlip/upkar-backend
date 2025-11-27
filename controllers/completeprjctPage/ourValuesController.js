@@ -1,17 +1,22 @@
-import OurValues from "../../models/completedprjctPage/ourValuesModel.js";
-import { uploadImageToCloudinary } from "../../config/cloudinaryUpload.js";
+import OurValues from '../../models/completedprjctPage/ourValuesModel.js';
+import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 
 export const createValue = async (req, res) => {
   try {
     let data = req.body;
 
     if (req.file) {
-      const imgRes = await uploadImageToCloudinary(req.file.buffer, "our-values");
+      const imgRes = await uploadImageToCloudinary(
+        req.file.buffer,
+        'our-values'
+      );
       data.iconImage = imgRes.secure_url;
     }
 
     if (!data.iconImage) {
-      return res.status(400).json({ success: false, message: "iconImage is required." });
+      return res
+        .status(400)
+        .json({ success: false, message: 'iconImage is required.' });
     }
 
     const newValue = await OurValues.create(data);
@@ -36,14 +41,19 @@ export const updateValue = async (req, res) => {
     let data = req.body;
 
     if (req.file) {
-      const imgRes = await uploadImageToCloudinary(req.file.buffer, "our-values");
+      const imgRes = await uploadImageToCloudinary(
+        req.file.buffer,
+        'our-values'
+      );
       data.iconImage = imgRes.secure_url;
     }
 
     const updated = await OurValues.findByIdAndUpdate(id, data, { new: true });
 
     if (!updated) {
-      return res.status(404).json({ success: false, message: "Value not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Value not found' });
     }
 
     res.status(200).json({ success: true, data: updated });
@@ -58,10 +68,12 @@ export const deleteValue = async (req, res) => {
     const del = await OurValues.findByIdAndDelete(id);
 
     if (!del) {
-      return res.status(404).json({ success: false, message: "Value not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: 'Value not found' });
     }
 
-    res.status(200).json({ success: true, message: "Deleted successfully" });
+    res.status(200).json({ success: true, message: 'Deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

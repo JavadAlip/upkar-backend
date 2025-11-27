@@ -1,6 +1,5 @@
-import multer from "multer";
+import multer from 'multer';
 
-// Use memory storage for Cloudinary streaming
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 

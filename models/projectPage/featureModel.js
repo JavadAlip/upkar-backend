@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const iconSchema = new mongoose.Schema({
-  icon: { type: String }, 
+  icon: { type: String },
   iconTitle: { type: String },
 });
 
@@ -17,7 +17,7 @@ const featureSchema = new mongoose.Schema(
     },
     icons: {
       type: [iconSchema],
-      validate: [arrayLimit, "{PATH} exceeds the limit of 3"],
+      validate: [arrayLimit, '{PATH} exceeds the limit of 3'],
     },
   },
   { timestamps: true }
@@ -27,6 +27,5 @@ function arrayLimit(val) {
   return val.length <= 3;
 }
 
-const Feature = mongoose.model("Feature", featureSchema);
+const Feature = mongoose.model('Feature', featureSchema);
 export default Feature;
-  

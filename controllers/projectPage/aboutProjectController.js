@@ -1,6 +1,5 @@
-import AboutProject from "../../models/projectPage/aboutprojectModel.js";
+import AboutProject from '../../models/projectPage/aboutprojectModel.js';
 
-// Create about project 
 export const createAboutProject = async (req, res) => {
   try {
     const {
@@ -22,13 +21,14 @@ export const createAboutProject = async (req, res) => {
     });
 
     await aboutProject.save();
-    res.status(201).json({ message: "AboutProject content created", aboutProject });
+    res
+      .status(201)
+      .json({ message: 'AboutProject content created', aboutProject });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Get all about projects
 export const getAboutProjects = async (req, res) => {
   try {
     const aboutProjects = await AboutProject.find();
@@ -38,7 +38,6 @@ export const getAboutProjects = async (req, res) => {
   }
 };
 
-// Update about project
 export const updateAboutProject = async (req, res) => {
   try {
     const { id } = req.params;
@@ -49,24 +48,23 @@ export const updateAboutProject = async (req, res) => {
     });
 
     if (!aboutProject)
-      return res.status(404).json({ message: "AboutProject not found" });
+      return res.status(404).json({ message: 'AboutProject not found' });
 
-    res.status(200).json({ message: "AboutProject updated", aboutProject });
+    res.status(200).json({ message: 'AboutProject updated', aboutProject });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Delete about project
 export const deleteAboutProject = async (req, res) => {
   try {
     const { id } = req.params;
     const aboutProject = await AboutProject.findByIdAndDelete(id);
 
     if (!aboutProject)
-      return res.status(404).json({ message: "AboutProject not found" });
+      return res.status(404).json({ message: 'AboutProject not found' });
 
-    res.status(200).json({ message: "AboutProject deleted" });
+    res.status(200).json({ message: 'AboutProject deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

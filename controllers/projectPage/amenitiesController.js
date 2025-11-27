@@ -1,7 +1,6 @@
 import Amenity from '../../models/projectPage/amenitiesModel.js';
 import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 
-// Create Amenity
 export const createAmenity = async (req, res) => {
   try {
     const { heading } = req.body;
@@ -10,10 +9,8 @@ export const createAmenity = async (req, res) => {
       return res.status(400).json({ message: 'Heading and icon are required' });
     }
 
-    // Upload icon to Cloudinary
     const result = await uploadImageToCloudinary(req.file.buffer, 'amenities');
 
-    // Save Amenity
     const amenity = await Amenity.create({
       heading,
       icon: result.secure_url,
@@ -29,7 +26,6 @@ export const createAmenity = async (req, res) => {
   }
 };
 
-//Get all Amenities
 export const getAmenities = async (req, res) => {
   try {
     const amenities = await Amenity.find().sort({ createdAt: -1 });
@@ -40,7 +36,6 @@ export const getAmenities = async (req, res) => {
   }
 };
 
-//Update Amenity
 export const updateAmenity = async (req, res) => {
   try {
     const { id } = req.params;
@@ -51,13 +46,14 @@ export const updateAmenity = async (req, res) => {
       return res.status(404).json({ message: 'Amenity not found' });
     }
 
-    // If new icon uploaded
     if (req.file) {
-      const result = await uploadImageToCloudinary(req.file.buffer, 'amenities');
+      const result = await uploadImageToCloudinary(
+        req.file.buffer,
+        'amenities'
+      );
       amenity.icon = result.secure_url;
     }
 
-    // Update heading
     if (heading) amenity.heading = heading;
 
     await amenity.save();
@@ -72,7 +68,6 @@ export const updateAmenity = async (req, res) => {
   }
 };
 
-//Delete Amenity
 export const deleteAmenity = async (req, res) => {
   try {
     const { id } = req.params;

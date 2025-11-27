@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const readMoreSchema = new mongoose.Schema(
   {
@@ -15,4 +15,4 @@ const readMoreSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("ReadMore", readMoreSchema);
+export default mongoose.model('ReadMore', readMoreSchema);

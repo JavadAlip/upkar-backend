@@ -1,18 +1,22 @@
-import CompletedProjectMain from "../../models/completedprjctPage/completedPrjctMain.js";
-import { uploadImageToCloudinary } from "../../config/cloudinaryUpload.js";
+import CompletedProjectMain from '../../models/completedprjctPage/completedPrjctMain.js';
+import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 
 export const createCompletedProjectMain = async (req, res) => {
   try {
     let data = req.body;
 
     if (req.file) {
-      const imgRes = await uploadImageToCloudinary(req.file.buffer, "project/main");
+      const imgRes = await uploadImageToCloudinary(
+        req.file.buffer,
+        'project/main'
+      );
       data.mainImage = imgRes.secure_url;
     }
 
-    // Ensure mainImage is present
     if (!data.mainImage) {
-      return res.status(400).json({ success: false, message: "mainImage is required." });
+      return res
+        .status(400)
+        .json({ success: false, message: 'mainImage is required.' });
     }
 
     const newProject = await CompletedProjectMain.create(data);
@@ -36,22 +40,20 @@ export const updateCompletedProjectMain = async (req, res) => {
     const { id } = req.params;
     let data = req.body;
 
-    // If a new image is uploaded, upload it to Cloudinary
     if (req.file) {
       const imgRes = await uploadImageToCloudinary(
         req.file.buffer,
-        "project/main"
+        'project/main'
       );
       data.mainImage = imgRes.secure_url;
     }
 
-    // Update the document
     const updated = await CompletedProjectMain.findByIdAndUpdate(id, data, {
       new: true,
     });
 
     if (!updated) {
-      return res.status(404).json({ success: false, message: "Not found" });
+      return res.status(404).json({ success: false, message: 'Not found' });
     }
 
     res.status(200).json({ success: true, data: updated });
@@ -66,10 +68,10 @@ export const deleteCompletedProjectMain = async (req, res) => {
     const del = await CompletedProjectMain.findByIdAndDelete(id);
 
     if (!del) {
-      return res.status(404).json({ success: false, message: "Not found" });
+      return res.status(404).json({ success: false, message: 'Not found' });
     }
 
-    res.status(200).json({ success: true, message: "Deleted successfully" });
+    res.status(200).json({ success: true, message: 'Deleted successfully' });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

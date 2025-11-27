@@ -11,6 +11,8 @@ const quoteCertificateSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const QuoteCertificate = mongoose.models.QuoteCertificate || mongoose.model('QuoteCertificate', quoteCertificateSchema);
+const QuoteCertificate =
+  mongoose.models.QuoteCertificate ||
+  mongoose.model('QuoteCertificate', quoteCertificateSchema);
 
 export default QuoteCertificate;

@@ -1,6 +1,5 @@
 import Quote from '../../models/homePage/QuoteModel.js';
 
-// Create Quote
 export const createQuote = async (req, res) => {
   try {
     const { text } = req.body;
@@ -11,14 +10,15 @@ export const createQuote = async (req, res) => {
 
     const newQuote = await Quote.create({ text });
 
-    res.status(201).json({ message: 'Quote created successfully', quote: newQuote });
+    res
+      .status(201)
+      .json({ message: 'Quote created successfully', quote: newQuote });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
 
-// Get All Quotes
 export const getAllQuotes = async (req, res) => {
   try {
     const quotes = await Quote.find().sort({ createdAt: -1 });
@@ -29,7 +29,6 @@ export const getAllQuotes = async (req, res) => {
   }
 };
 
-// Update Quote
 export const updateQuote = async (req, res) => {
   try {
     const { id } = req.params;
@@ -40,17 +39,21 @@ export const updateQuote = async (req, res) => {
     const updatedFields = {};
     if (text) updatedFields.text = text;
 
-    const updatedQuote = await Quote.findByIdAndUpdate(id, updatedFields, { new: true });
-    if (!updatedQuote) return res.status(404).json({ message: 'Quote not found' });
+    const updatedQuote = await Quote.findByIdAndUpdate(id, updatedFields, {
+      new: true,
+    });
+    if (!updatedQuote)
+      return res.status(404).json({ message: 'Quote not found' });
 
-    res.status(200).json({ message: 'Quote updated successfully', quote: updatedQuote });
+    res
+      .status(200)
+      .json({ message: 'Quote updated successfully', quote: updatedQuote });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
 
-// Delete Quote
 export const deleteQuote = async (req, res) => {
   try {
     const { id } = req.params;

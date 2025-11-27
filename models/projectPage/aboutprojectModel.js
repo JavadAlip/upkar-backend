@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const aboutProjectSchema = new mongoose.Schema(
   {
@@ -31,6 +31,6 @@ const aboutProjectSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const AboutProject = mongoose.model("AboutProject", aboutProjectSchema);
+const AboutProject = mongoose.model('AboutProject', aboutProjectSchema);
 
 export default AboutProject;

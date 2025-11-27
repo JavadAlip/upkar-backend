@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const projectSchema = new mongoose.Schema(
   {
@@ -12,9 +12,9 @@ const projectSchema = new mongoose.Schema(
       required: true,
     },
     mainImages: {
-      type: [String], 
+      type: [String],
       required: true,
-      validate: [arrayLimit, "{PATH} must have exactly 3 images"],
+      validate: [arrayLimit, '{PATH} must have exactly 3 images'],
     },
     customerHeading: {
       type: String,
@@ -36,6 +36,7 @@ function arrayLimit(val) {
   return val.length === 3;
 }
 
-const ProjectMain = mongoose.models.ProjectMain || mongoose.model("ProjectMain", projectSchema);
+const ProjectMain =
+  mongoose.models.ProjectMain || mongoose.model('ProjectMain', projectSchema);
 
 export default ProjectMain;

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const ourValuesSchema = new mongoose.Schema(
   {
@@ -15,4 +15,4 @@ const ourValuesSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("OurValues", ourValuesSchema);
+export default mongoose.model('OurValues', ourValuesSchema);

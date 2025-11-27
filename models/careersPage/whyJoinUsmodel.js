@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const whyJoinUsSchema = new mongoose.Schema(
   {
@@ -16,4 +16,4 @@ const whyJoinUsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("WhyJoinUs", whyJoinUsSchema);
+export default mongoose.model('WhyJoinUs', whyJoinUsSchema);
