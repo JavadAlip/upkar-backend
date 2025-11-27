@@ -1,36 +1,40 @@
 import Project from '../../models/projectPage/projectmainModel.js';
 import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 
-// CREATE Project
 export const createProject = async (req, res) => {
   try {
-    const { heading, description, customerHeading, customerDescription, ratingText } = req.body;
+    const {
+      heading,
+      description,
+      customerHeading,
+      customerDescription,
+      ratingText,
+    } = req.body;
 
-    // req.files should have 3 images: mainImages
     if (!req.files || req.files.length !== 3) {
-      return res.status(400).json({ message: 'Exactly 3 main images are required' });
+      return res
+        .status(400)
+        .json({ message: 'Exactly 3 main images are required' });
     }
 
-    // Upload images to Cloudinary
     const uploadedImages = [];
     for (const file of req.files) {
       const result = await uploadImageToCloudinary(file.buffer, 'projects');
       uploadedImages.push(result.secure_url);
     }
 
-    // Create project
     const project = await Project.create({
       heading,
       description,
       mainImages: uploadedImages,
       customerHeading,
       customerDescription,
-      ratingText
+      ratingText,
     });
 
     res.status(201).json({
       message: 'Project created successfully',
-      project
+      project,
     });
   } catch (error) {
     console.log(error);
@@ -38,7 +42,6 @@ export const createProject = async (req, res) => {
   }
 };
 
-// GET all Projects
 export const getAllProjects = async (req, res) => {
   try {
     const projects = await Project.find().sort({ createdAt: -1 });
@@ -49,16 +52,20 @@ export const getAllProjects = async (req, res) => {
   }
 };
 
-// UPDATE Project
 export const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const { heading, description, customerHeading, customerDescription, ratingText } = req.body;
+    const {
+      heading,
+      description,
+      customerHeading,
+      customerDescription,
+      ratingText,
+    } = req.body;
 
     const project = await Project.findById(id);
     if (!project) return res.status(404).json({ message: 'Project not found' });
 
-    // If new images uploaded → replace in Cloudinary
     if (req.files && req.files.length > 0) {
       const uploadedImages = [];
       for (const file of req.files) {
@@ -68,7 +75,6 @@ export const updateProject = async (req, res) => {
       project.mainImages = uploadedImages;
     }
 
-    // Update text fields if provided
     if (heading) project.heading = heading;
     if (description) project.description = description;
     if (customerHeading) project.customerHeading = customerHeading;
@@ -79,7 +85,7 @@ export const updateProject = async (req, res) => {
 
     res.status(200).json({
       message: 'Project updated successfully',
-      project
+      project,
     });
   } catch (error) {
     console.log(error);
@@ -87,7 +93,6 @@ export const updateProject = async (req, res) => {
   }
 };
 
-// DELETE Project
 export const deleteProject = async (req, res) => {
   try {
     const { id } = req.params;
