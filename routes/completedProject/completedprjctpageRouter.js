@@ -20,6 +20,12 @@ import {
   deleteValue,
 } from '../../controllers/completeprjctPage/ourValuesController.js';
 
+import {
+  createValueImage,
+  getValueImages,
+  updateValueImage,
+  deleteValueImage,
+} from '../../controllers/completeprjctPage/valueImageController.js';
 const router = express.Router();
 
 //project completed main
@@ -74,5 +80,23 @@ router.put(
   updateValue
 );
 router.delete('/delete-ourvalues/:id', AdminToken, deleteValue);
+
+//value images
+router.post(
+  '/create-value-image',
+  AdminToken,
+  upload.single('image'),
+  createValueImage
+);
+
+router.get('/get-value-images', getValueImages);
+router.delete('/delete-value-image/:id', AdminToken, deleteValueImage);
+
+router.put(
+  '/update-value-image/:id',
+  AdminToken,
+  upload.single('image'),
+  updateValueImage
+);
 
 export default router;
