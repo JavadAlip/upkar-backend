@@ -42,6 +42,12 @@ import {
   updateAward,
   deleteAward,
 } from '../../controllers/homePage/awardController.js';
+import {
+  createTreeSection,
+  getTreeSections,
+  updateTreeSection,
+  deleteTreeSection,
+} from '../../controllers/homePage/treeSectionController.js';
 
 const router = express.Router();
 
@@ -115,5 +121,21 @@ router.post('/create-award', AdminToken, upload.single('image'), createAward);
 router.get('/get-all', getAwards);
 router.put('/update/:id', AdminToken, upload.single('image'), updateAward);
 router.delete('/delete/:id', AdminToken, deleteAward);
+
+//tree
+router.post(
+  '/create-tree',
+  AdminToken,
+  upload.single('image'),
+  createTreeSection
+);
+router.get('/get-all-tree', getTreeSections);
+router.put(
+  '/update-tree/:id',
+  AdminToken,
+  upload.single('image'),
+  updateTreeSection
+);
+router.delete('/delete-tree/:id', AdminToken, deleteTreeSection);
 
 export default router;
