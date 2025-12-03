@@ -19,6 +19,12 @@ import {
   updateTeamMember,
   deleteTeamMember,
 } from '../../controllers/aboutusPage/teamController.js';
+import {
+  createAboutImages,
+  getAboutImages,
+  updateAboutImages,
+  deleteAboutImages,
+} from '../../controllers/aboutusPage/aboutImagesController.js';
 
 const router = express.Router();
 
@@ -67,5 +73,24 @@ router.put(
   updateTeamMember
 );
 router.delete('/delete-team/:id', AdminToken, deleteTeamMember);
+
+//about images
+router.post(
+  '/create-about-images',
+  AdminToken,
+  upload.array('images'),
+  createAboutImages
+);
+
+router.get('/get-all-about-images', getAboutImages);
+
+router.put(
+  '/update-about-images/:id',
+  AdminToken,
+  upload.array('images'),
+  updateAboutImages
+);
+
+router.delete('/delete-about-images/:id', AdminToken, deleteAboutImages);
 
 export default router;
