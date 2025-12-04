@@ -8,7 +8,8 @@ import {
   updateBanner,
 } from '../../controllers/homePage/bannerController.js';
 import {
-  createOrUpdateVisionMission,
+  createVisionMission,
+  updateVisionMission,
   getVisionMission,
   deleteVisionMission,
 } from '../../controllers/homePage/visionMissionController.js';
@@ -67,10 +68,19 @@ router.post(
   '/create-vision',
   AdminToken,
   upload.single('image'),
-  createOrUpdateVisionMission
+  createVisionMission
 );
+
+router.put(
+  '/update-vision/:id',
+  AdminToken,
+  upload.single('image'),
+  updateVisionMission
+);
+
 router.get('/get-all-visions', getVisionMission);
-router.delete('/delete-vision', AdminToken, deleteVisionMission);
+
+router.delete('/delete-vision/:id', AdminToken, deleteVisionMission);
 
 //projects
 router.post(

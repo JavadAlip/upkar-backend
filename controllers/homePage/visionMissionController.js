@@ -1,7 +1,7 @@
 import VisionMission from '../../models/homePage/visionMissionModel.js';
 import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 
-export const createOrUpdateVisionMission = async (req, res) => {
+export const createVisionMission = async (req, res) => {
   try {
     const { description, missionText, visionText, totalExperience, stats } =
       req.body;
@@ -9,7 +9,7 @@ export const createOrUpdateVisionMission = async (req, res) => {
     if (!description || !missionText || !visionText || !totalExperience) {
       return res
         .status(400)
-        .json({ message: 'All required fields must be provided' });
+        .json({ message: 'All required fields are required' });
     }
 
     if (!req.file) {
@@ -22,26 +22,7 @@ export const createOrUpdateVisionMission = async (req, res) => {
     );
     const parsedStats = stats ? JSON.parse(stats) : [];
 
-    let visionMission = await VisionMission.findOne();
-
-    if (visionMission) {
-      visionMission.description = description;
-      visionMission.missionText = missionText;
-      visionMission.visionText = visionText;
-      visionMission.totalExperience = totalExperience;
-      visionMission.image = result.secure_url;
-      visionMission.stats = parsedStats.length
-        ? parsedStats
-        : visionMission.stats;
-      await visionMission.save();
-
-      return res.status(200).json({
-        message: 'Vision & Mission updated successfully',
-        visionMission,
-      });
-    }
-
-    visionMission = await VisionMission.create({
+    const visionMission = await VisionMission.create({
       description,
       missionText,
       visionText,
@@ -55,17 +36,56 @@ export const createOrUpdateVisionMission = async (req, res) => {
       visionMission,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };
 
 export const getVisionMission = async (req, res) => {
   try {
-    const visionMission = await VisionMission.findOne();
+    const visionMissions = await VisionMission.find().sort({ createdAt: -1 });
+
+    res.status(200).json(visionMissions);
+  } catch (error) {
+    console.error('Error fetching Vision & Mission:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateVisionMission = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { description, missionText, visionText, totalExperience, stats } =
+      req.body;
+
+    const visionMission = await VisionMission.findById(id);
     if (!visionMission)
-      return res.status(404).json({ message: 'No Vision & Mission found' });
-    res.status(200).json(visionMission);
+      return res.status(404).json({ message: 'Vision & Mission not found' });
+
+    let imageURL = visionMission.image;
+
+    if (req.file) {
+      const result = await uploadImageToCloudinary(
+        req.file.buffer,
+        'vision-mission'
+      );
+      imageURL = result.secure_url;
+    }
+
+    const parsedStats = stats ? JSON.parse(stats) : visionMission.stats;
+
+    visionMission.description = description;
+    visionMission.missionText = missionText;
+    visionMission.visionText = visionText;
+    visionMission.totalExperience = totalExperience;
+    visionMission.image = imageURL;
+    visionMission.stats = parsedStats;
+
+    await visionMission.save();
+
+    res.status(200).json({
+      message: 'Vision & Mission updated successfully',
+      visionMission,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -73,15 +93,15 @@ export const getVisionMission = async (req, res) => {
 
 export const deleteVisionMission = async (req, res) => {
   try {
-    const visionMission = await VisionMission.findOne();
+    const { id } = req.params;
 
-    if (!visionMission) {
+    const visionMission = await VisionMission.findById(id);
+    if (!visionMission)
       return res.status(404).json({ message: 'Vision & Mission not found' });
-    }
 
-    await VisionMission.deleteOne({ _id: visionMission._id });
+    await VisionMission.deleteOne({ _id: id });
 
-    res.status(200).json({ message: 'Vision & Mission deleted successfully' });
+    res.status(200).json({ message: 'Deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
