@@ -50,6 +50,11 @@ import {
   deleteTreeSection,
 } from '../../controllers/homePage/treeSectionController.js';
 
+import {
+  createEnquiry,
+  getAllEnquiries,
+} from '../../controllers/homePage/enquiryController.js';
+
 const router = express.Router();
 
 //banner
@@ -147,5 +152,8 @@ router.put(
   updateTreeSection
 );
 router.delete('/delete-tree/:id', AdminToken, deleteTreeSection);
+
+router.post('/create-enquiry', createEnquiry);
+router.get('/all-enquiry', getAllEnquiries);
 
 export default router;
