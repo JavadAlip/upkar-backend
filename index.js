@@ -15,6 +15,7 @@ import completedprojectRoutes from './routes/completedProject/completedprjctpage
 import upcomingprojectRoutes from './routes/upcomingProject/upcomingprjctpageRouter.js';
 import ongoingprojectRoutes from './routes/ongoingProject/ongoingprjctpageRouter.js';
 import blogsRoutes from './routes/BlogPage/blogsRouter.js';
+import projectsRoutes from './routes/projects/projectRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -53,6 +54,7 @@ app.use('/api/completedproject', completedprojectRoutes);
 app.use('/api/upcomingproject', upcomingprojectRoutes);
 app.use('/api/ongoingproject', ongoingprojectRoutes);
 app.use('/api/blogspage', blogsRoutes);
+app.use('/api/projects', projectsRoutes);
 
 //Db Connection
 mongoose
