@@ -62,6 +62,37 @@ export const createProject = async (req, res) => {
       }
     }
 
+    let parsedKeyFeatures = [];
+    let parsedAmenities = [];
+
+    if (keyFeatures) {
+      try {
+        parsedKeyFeatures =
+          typeof keyFeatures === 'string'
+            ? JSON.parse(keyFeatures)
+            : Array.isArray(keyFeatures)
+            ? keyFeatures
+            : [keyFeatures];
+      } catch (e) {
+        parsedKeyFeatures = Array.isArray(keyFeatures)
+          ? keyFeatures
+          : [keyFeatures];
+      }
+    }
+
+    if (amenities) {
+      try {
+        parsedAmenities =
+          typeof amenities === 'string'
+            ? JSON.parse(amenities)
+            : Array.isArray(amenities)
+            ? amenities
+            : [amenities];
+      } catch (e) {
+        parsedAmenities = Array.isArray(amenities) ? amenities : [amenities];
+      }
+    }
+
     //  CREATE PROJECT
     const project = await ProjectAdmin.create({
       projectName,
@@ -79,16 +110,8 @@ export const createProject = async (req, res) => {
       projectArea: normalizeSingle(projectArea),
       totalUnits: normalizeNumber(totalUnits),
 
-      keyFeatures: keyFeatures
-        ? Array.isArray(keyFeatures)
-          ? keyFeatures
-          : [keyFeatures]
-        : [],
-      amenities: amenities
-        ? Array.isArray(amenities)
-          ? amenities
-          : [amenities]
-        : [],
+      keyFeatures: parsedKeyFeatures,
+      amenities: parsedAmenities,
 
       aboutProject,
       reraDescription,
@@ -166,21 +189,57 @@ export const updateProject = async (req, res) => {
     if (waterSupply) project.waterSupply = normalizeSingle(waterSupply);
     if (projectArea) project.projectArea = normalizeSingle(projectArea);
     if (totalUnits) project.totalUnits = normalizeNumber(totalUnits);
-
-    if (keyFeatures)
-      project.keyFeatures = Array.isArray(keyFeatures)
-        ? keyFeatures
-        : [keyFeatures];
-    if (amenities)
-      project.amenities = Array.isArray(amenities) ? amenities : [amenities];
     if (possessionDate) project.possessionDate = possessionDate;
 
+    if (keyFeatures) {
+      try {
+        project.keyFeatures =
+          typeof keyFeatures === 'string'
+            ? JSON.parse(keyFeatures)
+            : Array.isArray(keyFeatures)
+            ? keyFeatures
+            : [keyFeatures];
+      } catch (e) {
+        project.keyFeatures = Array.isArray(keyFeatures)
+          ? keyFeatures
+          : [keyFeatures];
+      }
+    }
+
+    if (amenities) {
+      try {
+        project.amenities =
+          typeof amenities === 'string'
+            ? JSON.parse(amenities)
+            : Array.isArray(amenities)
+            ? amenities
+            : [amenities];
+      } catch (e) {
+        project.amenities = Array.isArray(amenities) ? amenities : [amenities];
+      }
+    }
+
+    if (req.files?.propertyImages?.length) {
+      const newImages = [];
+      for (const file of req.files.propertyImages) {
+        const uploaded = await uploadImageToCloudinary(file.buffer, 'projects');
+        newImages.push(uploaded.secure_url);
+      }
+
+      project.propertyImages = [
+        ...(project.propertyImages || []),
+        ...newImages,
+      ];
+    }
+
     if (req.files?.masterPlans?.length) {
-      project.masterPlans = [];
+      const newPlans = [];
       for (const file of req.files.masterPlans) {
         const uploaded = await uploadImageToCloudinary(file.buffer, 'projects');
-        project.masterPlans.push(uploaded.secure_url);
+        newPlans.push(uploaded.secure_url);
       }
+
+      project.masterPlans = [...(project.masterPlans || []), ...newPlans];
     }
 
     if (req.files?.brochureImage?.length) {
@@ -189,14 +248,6 @@ export const updateProject = async (req, res) => {
         'projects'
       );
       project.brochureImage = uploaded.secure_url;
-    }
-
-    if (req.files?.propertyImages?.length) {
-      project.propertyImages = [];
-      for (const file of req.files.propertyImages) {
-        const uploaded = await uploadImageToCloudinary(file.buffer, 'projects');
-        project.propertyImages.push(uploaded.secure_url);
-      }
     }
 
     await project.save();
