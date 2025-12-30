@@ -18,6 +18,11 @@ import {
   updateWhyJoinUs,
   deleteWhyJoinUs,
 } from '../../controllers/careersPage/whyJoinusController.js';
+import {
+  createCareerEnquiry,
+  getAllCareerEnquiries,
+  deleteCareerEnquiry,
+} from '../../controllers/careersPage/careerEnquiryController.js';
 import upload from '../../middlewares/upload.js';
 const router = express.Router();
 
@@ -48,5 +53,10 @@ router.post('/create-whyjoin', AdminToken, createWhyJoinUs);
 router.get('/get-all-whyjoin', getAllWhyJoinUs);
 router.put('/update-whyjoin/:id', AdminToken, updateWhyJoinUs);
 router.delete('/delete-whyjoin/:id', AdminToken, deleteWhyJoinUs);
+
+//career enquiry
+router.post('/create-career-enquiry', createCareerEnquiry);
+router.get('/all-career-enquiry', getAllCareerEnquiries);
+router.delete('/delete-career-enquiry/:id', deleteCareerEnquiry);
 
 export default router;

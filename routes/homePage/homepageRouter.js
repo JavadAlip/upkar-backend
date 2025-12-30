@@ -53,6 +53,7 @@ import {
 import {
   createEnquiry,
   getAllEnquiries,
+  deleteEnquiry,
 } from '../../controllers/homePage/enquiryController.js';
 
 const router = express.Router();
@@ -153,7 +154,9 @@ router.put(
 );
 router.delete('/delete-tree/:id', AdminToken, deleteTreeSection);
 
+// project enquiry
 router.post('/create-enquiry', createEnquiry);
 router.get('/all-enquiry', getAllEnquiries);
+router.delete('/delete-enquiry/:id', AdminToken, deleteEnquiry);
 
 export default router;
