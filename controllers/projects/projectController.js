@@ -590,7 +590,11 @@
 // };
 
 import ProjectAdmin from '../../models/Projects/ProjectAdmin.js';
-import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
+// import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
+import {
+  uploadImageToCloudinary,
+  uploadRawToCloudinary,
+} from '../../config/cloudinaryUpload.js';
 
 const normalizeSingle = (value) => (Array.isArray(value) ? value[0] : value);
 const normalizeNumber = (value) =>
@@ -659,12 +663,31 @@ export const createProject = async (req, res) => {
     }
 
     // Upload brochure image
+    // if (req.files?.brochureImage?.length) {
+    //   // const uploaded = await uploadImageToCloudinary(
+    //   //   req.files.brochureImage[0].buffer,
+    //   //   'projects',
+    //   // );
+    //   // brochureImage = uploaded.secure_url;
+    //   const uploaded = await uploadRawToCloudinary(
+    //     req.files.brochureImage[0].buffer,
+    //     'projects/brochures',
+    //   );
+    //   brochureImage = uploaded.secure_url;
+    // }
     if (req.files?.brochureImage?.length) {
-      const uploaded = await uploadImageToCloudinary(
-        req.files.brochureImage[0].buffer,
-        'projects',
+      const file = req.files.brochureImage[0];
+
+      const uploaded = await uploadRawToCloudinary(
+        file.buffer,
+        'projects/brochures',
       );
+
       brochureImage = uploaded.secure_url;
+
+      //  SAVE REAL FILE INFO
+      brochureFileName = file.originalname; // ex: layout.pdf, image.png
+      brochureMimeType = file.mimetype; // application/pdf, image/png
     }
 
     // ==================== PARSE KEY FEATURES & AMENITIES ====================
@@ -737,6 +760,9 @@ export const createProject = async (req, res) => {
       sections,
       brochureImage,
       propertyImages,
+      brochureImage,
+      brochureFileName,
+      brochureMimeType,
     });
 
     return res.status(201).json({
@@ -864,12 +890,31 @@ export const updateProject = async (req, res) => {
     }
 
     // ==================== BROCHURE IMAGE ====================
+    // if (req.files?.brochureImage?.length) {
+    //   // const uploaded = await uploadImageToCloudinary(
+    //   //   req.files.brochureImage[0].buffer,
+    //   //   'projects',
+    //   // );
+    //   // project.brochureImage = uploaded.secure_url;
+    //   const uploaded = await uploadRawToCloudinary(
+    //     req.files.brochureImage[0].buffer,
+    //     'projects/brochures',
+    //   );
+    //   project.brochureImage = uploaded.secure_url;
+    // }
     if (req.files?.brochureImage?.length) {
-      const uploaded = await uploadImageToCloudinary(
-        req.files.brochureImage[0].buffer,
-        'projects',
+      const file = req.files.brochureImage[0];
+
+      const uploaded = await uploadRawToCloudinary(
+        file.buffer,
+        'projects/brochures',
       );
+
       project.brochureImage = uploaded.secure_url;
+
+      //  SAVE REAL FILE INFO
+      project.brochureFileName = file.originalname;
+      project.brochureMimeType = file.mimetype;
     }
 
     await project.save();

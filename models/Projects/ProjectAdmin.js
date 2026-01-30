@@ -100,6 +100,14 @@ const projectAdminSchema = new mongoose.Schema(
       set: (v) => (Array.isArray(v) ? Number(v[0]) : Number(v)),
     },
 
+    brochureFileName: {
+      type: String,
+    },
+
+    brochureMimeType: {
+      type: String,
+    },
+
     // Master Plans (independent)
     masterPlans: [masterPlanSchema],
 
