@@ -650,6 +650,8 @@ export const createProject = async (req, res) => {
 
     // ==================== UPLOAD IMAGES ====================
     let brochureImage = null;
+    let brochureFileName = null; // ✅ ADD THIS
+    let brochureMimeType = null; // ✅ ADD THIS
     let propertyImages = [];
     const masterPlansFiles = req.files?.masterPlans || [];
     const sectionFiles = req.files?.sectionImages || [];
@@ -760,7 +762,6 @@ export const createProject = async (req, res) => {
       sections,
       brochureImage,
       propertyImages,
-      brochureImage,
       brochureFileName,
       brochureMimeType,
     });
