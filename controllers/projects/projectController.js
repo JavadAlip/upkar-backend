@@ -597,8 +597,15 @@ import {
 } from '../../config/cloudinaryUpload.js';
 
 const normalizeSingle = (value) => (Array.isArray(value) ? value[0] : value);
-const normalizeNumber = (value) =>
-  Array.isArray(value) ? Number(value[0]) : Number(value);
+// const normalizeNumber = (value) =>
+//   Array.isArray(value) ? Number(value[0]) : Number(value);
+const normalizeNumber = (value) => {
+  if (value === undefined || value === null || value === '') return undefined;
+
+  const num = Array.isArray(value) ? Number(value[0]) : Number(value);
+
+  return isNaN(num) ? undefined : num;
+};
 
 // ==================== HELPER ====================
 function parseArrayField(field) {
@@ -737,6 +744,36 @@ export const createProject = async (req, res) => {
     }
 
     // ==================== CREATE PROJECT ====================
+    // const project = await ProjectAdmin.create({
+    //   projectName,
+    //   projectType,
+    //   projectStatus,
+    //   projectDescription,
+    //   location,
+    //   projectAddress,
+    //   priceStartsFrom,
+    //   plotSize,
+    //   possessionDate: possessionDate || null,
+    //   unitConfiguration: normalizeSingle(unitConfiguration),
+    //   waterSupply: normalizeSingle(waterSupply),
+    //   projectArea: normalizeSingle(projectArea),
+    //   totalUnits: normalizeNumber(totalUnits),
+    //   keyFeatures: parsedKeyFeatures,
+    //   amenities: parsedAmenities,
+    //   aboutProject,
+    //   reraDescription,
+    //   noBrokerReraId,
+    //   builderProjectReraId,
+    //   locationUrl,
+    //   masterPlans,
+    //   sections,
+    //   brochureImage,
+    //   propertyImages,
+    //   brochureFileName,
+    //   brochureMimeType,
+    // });
+    const totalUnitsNum = normalizeNumber(totalUnits);
+
     const project = await ProjectAdmin.create({
       projectName,
       projectType,
@@ -750,7 +787,9 @@ export const createProject = async (req, res) => {
       unitConfiguration: normalizeSingle(unitConfiguration),
       waterSupply: normalizeSingle(waterSupply),
       projectArea: normalizeSingle(projectArea),
-      totalUnits: normalizeNumber(totalUnits),
+
+      ...(totalUnitsNum !== undefined && { totalUnits: totalUnitsNum }),
+
       keyFeatures: parsedKeyFeatures,
       amenities: parsedAmenities,
       aboutProject,
@@ -806,7 +845,10 @@ export const updateProject = async (req, res) => {
       project.unitConfiguration = normalizeSingle(unitConfiguration);
     if (waterSupply) project.waterSupply = normalizeSingle(waterSupply);
     if (projectArea) project.projectArea = normalizeSingle(projectArea);
-    if (totalUnits) project.totalUnits = normalizeNumber(totalUnits);
+    // if (totalUnits) project.totalUnits = normalizeNumber(totalUnits);
+    if (totalUnits !== undefined)
+      project.totalUnits = normalizeNumber(totalUnits);
+
     if (possessionDate) project.possessionDate = possessionDate;
 
     project.keyFeatures = keyFeatures

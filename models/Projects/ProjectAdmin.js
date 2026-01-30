@@ -97,7 +97,10 @@ const projectAdminSchema = new mongoose.Schema(
     },
     totalUnits: {
       type: Number,
-      set: (v) => (Array.isArray(v) ? Number(v[0]) : Number(v)),
+      set: (v) => {
+        const num = Array.isArray(v) ? Number(v[0]) : Number(v);
+        return isNaN(num) ? undefined : num;
+      },
     },
 
     brochureFileName: {
