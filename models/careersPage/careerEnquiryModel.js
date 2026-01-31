@@ -32,7 +32,7 @@ const careerEnquirySchema = new mongoose.Schema(
       trim: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const CareerEnquiry = mongoose.model('CareerEnquiry', careerEnquirySchema);

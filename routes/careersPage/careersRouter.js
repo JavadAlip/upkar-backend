@@ -23,6 +23,11 @@ import {
   getAllCareerEnquiries,
   deleteCareerEnquiry,
 } from '../../controllers/careersPage/careerEnquiryController.js';
+import {
+  createCareerRole,
+  getCareerRoles,
+  deleteCareerRole,
+} from '../../controllers/careersPage/careerRoleController.js';
 import upload from '../../middlewares/upload.js';
 const router = express.Router();
 
@@ -37,14 +42,14 @@ router.post(
   '/create-career-images',
   AdminToken,
   upload.array('images'),
-  createCareerImages
+  createCareerImages,
 );
 router.get('/get-all-career-images', getCareerImages);
 router.put(
   '/update-career-images/:id',
   AdminToken,
   upload.array('images'),
-  updateCareerImages
+  updateCareerImages,
 );
 router.delete('/delete-career-images/:id', AdminToken, deleteCareerImages);
 
@@ -53,6 +58,11 @@ router.post('/create-whyjoin', AdminToken, createWhyJoinUs);
 router.get('/get-all-whyjoin', getAllWhyJoinUs);
 router.put('/update-whyjoin/:id', AdminToken, updateWhyJoinUs);
 router.delete('/delete-whyjoin/:id', AdminToken, deleteWhyJoinUs);
+
+//admin-create-roles
+router.post('/create-role', createCareerRole);
+router.get('/get-roles', getCareerRoles);
+router.delete('/delete-role/:id', deleteCareerRole);
 
 //career enquiry
 router.post('/create-career-enquiry', createCareerEnquiry);
