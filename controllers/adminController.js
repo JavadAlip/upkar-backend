@@ -341,28 +341,25 @@ export const updateAdminProfile = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 /* =======================
-   CHANGE PASSWORD (USERNAME BASED)
+   CHANGE PASSWORD
 ======================= */
 export const changePassword = async (req, res) => {
   try {
-    const { username, newPassword, confirmPassword } = req.body;
-
-    if (!username || !newPassword || !confirmPassword) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    if (!currentPassword || !newPassword || !confirmPassword)
+      return res.status(400).json({ message: 'All password fields required' });
 
     const admin = await Admin.findById(req.admin.adminId);
     if (!admin) return res.status(404).json({ message: 'Admin not found' });
 
-    // ✅ Username check instead of password
-    if (username !== admin.name) {
-      return res.status(401).json({ message: 'Username does not match' });
-    }
+    const isMatch = await bcrypt.compare(currentPassword, admin.password);
+    if (!isMatch)
+      return res.status(401).json({ message: 'Current password is incorrect' });
 
-    if (newPassword !== confirmPassword) {
+    if (newPassword !== confirmPassword)
       return res.status(400).json({ message: 'Passwords do not match' });
-    }
 
     admin.password = await bcrypt.hash(newPassword, 10);
     await admin.save();
