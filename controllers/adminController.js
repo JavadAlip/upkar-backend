@@ -75,27 +75,55 @@ export const adminLogin = async (req, res) => {
 /* =======================
    FORGOT PASSWORD
 ======================= */
+// export const adminForgotPassword = async (req, res) => {
+//   console.log('REQ.BODY:', req.body);
+//   const { email } = req.body;
+
+//   if (email !== process.env.ADMIN_EMAIL) {
+//     return res.status(403).json({ message: 'Unauthorized email' });
+//   }
+
+//   const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+//   otpStore.otp = otp;
+//   otpStore.expiresAt = Date.now() + 5 * 60 * 1000;
+//   otpStore.verified = false;
+
+//   await sendEmail(
+//     email,
+//     'Upkar Admin Password Reset OTP',
+//     `Your OTP is ${otp}. Valid for 5 minutes.`,
+//   );
+
+//   res.status(200).json({ message: 'OTP sent successfully' });
+// };
+
 export const adminForgotPassword = async (req, res) => {
-  console.log('REQ.BODY:', req.body);
-  const { email } = req.body;
+  try {
+    console.log('REQ.BODY:', req.body);
+    const { email } = req.body;
 
-  if (email !== process.env.ADMIN_EMAIL) {
-    return res.status(403).json({ message: 'Unauthorized email' });
+    if (email !== process.env.ADMIN_EMAIL) {
+      return res.status(403).json({ message: 'Unauthorized email' });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    otpStore.otp = otp;
+    otpStore.expiresAt = Date.now() + 5 * 60 * 1000;
+    otpStore.verified = false;
+
+    await sendEmail(
+      email,
+      'Upkar Admin Password Reset OTP',
+      `Your OTP is ${otp}. Valid for 5 minutes.`,
+    );
+
+    res.status(200).json({ message: 'OTP sent successfully' });
+  } catch (error) {
+    console.error('FORGOT PASSWORD ERROR:', error);
+    res.status(500).json({ message: 'Failed to send OTP email' });
   }
-
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-  otpStore.otp = otp;
-  otpStore.expiresAt = Date.now() + 5 * 60 * 1000;
-  otpStore.verified = false;
-
-  await sendEmail(
-    email,
-    'Upkar Admin Password Reset OTP',
-    `Your OTP is ${otp}. Valid for 5 minutes.`,
-  );
-
-  res.status(200).json({ message: 'OTP sent successfully' });
 };
 
 /* =======================
