@@ -76,6 +76,7 @@ export const adminLogin = async (req, res) => {
    FORGOT PASSWORD
 ======================= */
 export const adminForgotPassword = async (req, res) => {
+  console.log('REQ.BODY:', req.body);
   const { email } = req.body;
 
   if (email !== process.env.ADMIN_EMAIL) {

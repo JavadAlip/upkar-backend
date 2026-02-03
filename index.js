@@ -65,6 +65,7 @@
 //   .catch((err) => console.log('MongoDB Connection Error:', err));
 
 // app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
