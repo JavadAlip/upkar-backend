@@ -87,6 +87,9 @@ import blogsRoutes from './routes/BlogPage/blogsRouter.js';
 import projectsRoutes from './routes/projects/projectRoutes.js';
 import categoriesRoutes from './routes/categories/categoriesRouter.js';
 
+// Import the admin creation function
+import { createAdminOnce } from './controllers/adminController.js';
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -130,7 +133,11 @@ mongoose
   .connect(process.env.MONGO_URI, {
     serverSelectionTimeoutMS: 30000,
   })
-  .then(() => console.log('MongoDB Connected'))
+  .then(async () => {
+    console.log('MongoDB Connected');
+    // Create admin account if it doesn't exist
+    await createAdminOnce();
+  })
   .catch((err) => console.error('MongoDB Connection Error:', err.message));
 
 /* =========================
