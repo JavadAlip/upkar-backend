@@ -65,7 +65,6 @@
 //   .catch((err) => console.log('MongoDB Connection Error:', err));
 
 // app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -91,7 +90,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 /* =========================
-   CORS CONFIG (FIXED)
+   CORS CONFIG (NODE 22 SAFE)
 ========================= */
 app.use(
   cors({
@@ -102,11 +101,8 @@ app.use(
   }),
 );
 
-// Handle preflight requests
-app.options('*', cors());
-
 /* =========================
-   MIDDLEWARES
+   MIDDLEWARE
 ========================= */
 app.use(express.json());
 
@@ -134,9 +130,11 @@ mongoose
     serverSelectionTimeoutMS: 30000,
   })
   .then(() => console.log('MongoDB Connected'))
-  .catch((err) => console.error('MongoDB Connection Error:', err));
+  .catch((err) => console.error('MongoDB Connection Error:', err.message));
 
 /* =========================
    SERVER
 ========================= */
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
