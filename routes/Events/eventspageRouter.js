@@ -8,21 +8,39 @@ import {
   deleteEvent,
 } from '../../controllers/eventsPage/eventController.js';
 
+import {
+  createOrUpdateEventPage,
+  getEventPage,
+} from '../../controllers/eventsPage/eventPageController.js';
+
 const router = express.Router();
 
 router.post(
   '/create-event',
   AdminToken,
-  upload.single('eventImage'),
-  createEvent
+  upload.fields([{ name: 'eventImages', maxCount: 5 }]),
+  createEvent,
 );
+
 router.get('/get-all-events', getAllEvents);
 router.put(
   '/update-event/:id',
   AdminToken,
-  upload.single('eventImage'),
-  updateEvent
+  upload.fields([{ name: 'eventImages', maxCount: 5 }]),
+  updateEvent,
 );
 router.delete('/delete-event/:id', AdminToken, deleteEvent);
+
+router.post(
+  '/update-event-page',
+  AdminToken,
+  upload.fields([
+    { name: 'mainImage', maxCount: 1 },
+    { name: 'subImage', maxCount: 1 },
+  ]),
+  createOrUpdateEventPage,
+);
+
+router.get('/get-event-page', getEventPage);
 
 export default router;
