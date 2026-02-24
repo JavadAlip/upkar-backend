@@ -13,8 +13,15 @@ import {
   getEventPage,
 } from '../../controllers/eventsPage/eventPageController.js';
 
+import {
+  createEventEnquiry,
+  getAllEventEnquiries,
+  deleteEventEnquiry,
+} from '../../controllers/eventsPage/eventEnquiryController.js';
+
 const router = express.Router();
 
+//events
 router.post(
   '/create-event',
   AdminToken,
@@ -31,6 +38,7 @@ router.put(
 );
 router.delete('/delete-event/:id', AdminToken, deleteEvent);
 
+// events page top
 router.post(
   '/update-event-page',
   AdminToken,
@@ -43,4 +51,8 @@ router.post(
 
 router.get('/get-event-page', getEventPage);
 
+//event enquiry
+router.post('/create-event-enquiry', createEventEnquiry);
+router.get('/all-event-enquiry', getAllEventEnquiries);
+router.delete('/delete-event-enquiry/:id', deleteEventEnquiry);
 export default router;
