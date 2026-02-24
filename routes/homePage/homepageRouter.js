@@ -56,6 +56,20 @@ import {
   deleteEnquiry,
 } from '../../controllers/homePage/enquiryController.js';
 
+import {
+  createBrandEthos,
+  updateBrandEthos,
+  getBrandEthos,
+  deleteBrandEthos,
+} from '../../controllers/homePage/brandEthosController.js';
+
+import {
+  createBrandMotive,
+  updateBrandMotive,
+  getBrandMotive,
+  deleteBrandMotive,
+} from '../../controllers/homePage/brandMotiveController.js';
+
 const router = express.Router();
 
 //banner
@@ -66,7 +80,7 @@ router.put(
   '/edit-banner/:id',
   AdminToken,
   upload.single('image'),
-  updateBanner
+  updateBanner,
 );
 
 // vision-mission
@@ -74,14 +88,14 @@ router.post(
   '/create-vision',
   AdminToken,
   upload.single('image'),
-  createVisionMission
+  createVisionMission,
 );
 
 router.put(
   '/update-vision/:id',
   AdminToken,
   upload.single('image'),
-  updateVisionMission
+  updateVisionMission,
 );
 
 router.get('/get-all-visions', getVisionMission);
@@ -93,14 +107,14 @@ router.post(
   '/create-project',
   AdminToken,
   upload.single('image'),
-  createProject
+  createProject,
 );
 router.get('/get-all-projects', getProjects);
 router.put(
   '/update-project/:id',
   AdminToken,
   upload.single('image'),
-  updateProject
+  updateProject,
 );
 router.delete('/delete-project/:id', AdminToken, deleteProject);
 
@@ -109,13 +123,13 @@ router.post(
   '/create-certificate',
   AdminToken,
   upload.single('icon'),
-  createCertification
+  createCertification,
 );
 router.put(
   '/update-certificate/:id',
   AdminToken,
   upload.single('icon'),
-  updateCertification
+  updateCertification,
 );
 router.get('/get-all-certificates', getCertifications);
 router.delete('/delete-certificate/:id', AdminToken, deleteCertification);
@@ -143,14 +157,14 @@ router.post(
   '/create-tree',
   AdminToken,
   upload.single('image'),
-  createTreeSection
+  createTreeSection,
 );
 router.get('/get-all-tree', getTreeSections);
 router.put(
   '/update-tree/:id',
   AdminToken,
   upload.single('image'),
-  updateTreeSection
+  updateTreeSection,
 );
 router.delete('/delete-tree/:id', AdminToken, deleteTreeSection);
 
@@ -158,5 +172,30 @@ router.delete('/delete-tree/:id', AdminToken, deleteTreeSection);
 router.post('/create-enquiry', createEnquiry);
 router.get('/all-enquiry', getAllEnquiries);
 router.delete('/delete-enquiry/:id', AdminToken, deleteEnquiry);
+
+// Brand Ethos Routes
+router.post(
+  '/create-brand-ethos',
+  AdminToken,
+  upload.single('icon'),
+  createBrandEthos,
+);
+router.put(
+  '/update-brand-ethos/:id',
+  AdminToken,
+  upload.single('icon'),
+  updateBrandEthos,
+);
+router.get('/get-all-brand-ethos', getBrandEthos);
+router.delete('/delete-brand-ethos/:id', AdminToken, deleteBrandEthos);
+
+// Brand Motive Routes
+router.post('/create-brand-motive', AdminToken, createBrandMotive);
+
+router.put('/update-brand-motive/:id', AdminToken, updateBrandMotive);
+
+router.get('/get-all-brand-motive', getBrandMotive);
+
+router.delete('/delete-brand-motive/:id', AdminToken, deleteBrandMotive);
 
 export default router;
