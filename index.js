@@ -86,6 +86,7 @@ import ongoingprojectRoutes from './routes/ongoingProject/ongoingprjctpageRouter
 import blogsRoutes from './routes/BlogPage/blogsRouter.js';
 import projectsRoutes from './routes/projects/projectRoutes.js';
 import categoriesRoutes from './routes/categories/categoriesRouter.js';
+import contactRoutes from './routes/contactPage/contactRouter.js';
 
 // Import the admin creation function
 import { createAdminOnce } from './controllers/adminController.js';
@@ -124,6 +125,7 @@ app.use('/api/upcomingproject', upcomingprojectRoutes);
 app.use('/api/ongoingproject', ongoingprojectRoutes);
 app.use('/api/blogspage', blogsRoutes);
 app.use('/api/projects', projectsRoutes);
+app.use('/api/contactpage', contactRoutes);
 app.use('/api/categories', categoriesRoutes);
 
 /* =========================
