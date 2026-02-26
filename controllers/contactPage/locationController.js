@@ -1,20 +1,26 @@
 import Location from '../../models/contactPage/locationModel.js';
 
-/**
- * CREATE Location
- */
+//  CREATE Location
 export const createLocation = async (req, res) => {
   try {
-    const data = req.body;
+    let { title, embedUrl, locationUrl } = req.body;
 
-    if (!data.title || !data.locationUrl) {
+    if (!title || !embedUrl || !locationUrl) {
       return res.status(400).json({
         success: false,
-        message: 'Title and locationUrl are required.',
+        message: 'Title, embedUrl and locationUrl are required.',
       });
     }
+    const srcMatch = embedUrl.match(/src="([^"]+)"/);
+    if (srcMatch) {
+      embedUrl = srcMatch[1];
+    }
 
-    const newLocation = await Location.create(data);
+    const newLocation = await Location.create({
+      title,
+      embedUrl,
+      locationUrl,
+    });
 
     res.status(201).json({
       success: true,
@@ -28,9 +34,7 @@ export const createLocation = async (req, res) => {
   }
 };
 
-/**
- * GET All Locations
- */
+// GET All Locations
 export const getAllLocations = async (req, res) => {
   try {
     const locations = await Location.find().sort({ createdAt: -1 });
@@ -47,16 +51,32 @@ export const getAllLocations = async (req, res) => {
   }
 };
 
-/**
- * UPDATE Location
- */
+//  UPDATE Location
 export const updateLocation = async (req, res) => {
   try {
     const { id } = req.params;
+    let { title, embedUrl, locationUrl } = req.body;
 
-    const updated = await Location.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    if (!title || !embedUrl || !locationUrl) {
+      return res.status(400).json({
+        success: false,
+        message: 'Title, embedUrl and locationUrl are required.',
+      });
+    }
+    const srcMatch = embedUrl.match(/src="([^"]+)"/);
+    if (srcMatch) {
+      embedUrl = srcMatch[1];
+    }
+
+    const updated = await Location.findByIdAndUpdate(
+      id,
+      {
+        title,
+        embedUrl,
+        locationUrl,
+      },
+      { new: true },
+    );
 
     if (!updated) {
       return res.status(404).json({
@@ -77,9 +97,7 @@ export const updateLocation = async (req, res) => {
   }
 };
 
-/**
- * DELETE Location
- */
+//  DELETE Location
 export const deleteLocation = async (req, res) => {
   try {
     const { id } = req.params;

@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-
 const locationSchema = new mongoose.Schema(
   {
     title: {
@@ -7,9 +6,13 @@ const locationSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    locationUrl: {
+    embedUrl: {
       type: String,
       required: true,
+      trim: true,
+    },
+    locationUrl: {
+      type: String,
       trim: true,
     },
   },
