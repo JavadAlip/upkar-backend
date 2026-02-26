@@ -62,9 +62,9 @@ const sectionSchema = new mongoose.Schema({
 
 // Master Plan Schema
 const masterPlanSchema = new mongoose.Schema({
-  planName: { type: String, required: true },
-  carpetArea: { type: String, required: true },
-  planPhoto: { type: String, required: true },
+  planName: { type: String },
+  carpetArea: { type: String },
+  planPhoto: { type: String },
 });
 
 // Project Schema
