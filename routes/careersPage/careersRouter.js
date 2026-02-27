@@ -22,6 +22,7 @@ import {
   createCareerEnquiry,
   getAllCareerEnquiries,
   deleteCareerEnquiry,
+  downloadCareerResume,
 } from '../../controllers/careersPage/careerEnquiryController.js';
 import {
   createCareerRole,
@@ -65,8 +66,14 @@ router.get('/get-roles', getCareerRoles);
 router.delete('/delete-role/:id', deleteCareerRole);
 
 //career enquiry
-router.post('/create-career-enquiry', createCareerEnquiry);
+router.post(
+  '/create-career-enquiry',
+  upload.single('resume'),
+  createCareerEnquiry,
+);
 router.get('/all-career-enquiry', getAllCareerEnquiries);
 router.delete('/delete-career-enquiry/:id', deleteCareerEnquiry);
+
+router.get('/download-career-resume/:id', downloadCareerResume);
 
 export default router;

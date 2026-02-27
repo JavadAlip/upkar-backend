@@ -31,6 +31,10 @@ const careerEnquirySchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
+    resumeUrl: String,
+    resumeFileName: String,
+    resumeMimeType: String,
   },
   { timestamps: true },
 );
