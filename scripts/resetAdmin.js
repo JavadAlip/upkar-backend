@@ -22,7 +22,7 @@ async function resetAdmin() {
       password: hashedPassword,
     });
 
-    console.log('✅ Fresh admin created successfully');
+    console.log(' Fresh admin created successfully');
     console.log('Name: SuperAdmin');
     console.log('Password: admin123');
 

@@ -24,11 +24,11 @@ const projectSchema = new mongoose.Schema(
       required: true,
     },
     image: {
-      type: String, // Cloudinary URL or path
+      type: String,
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const Project = mongoose.model('Project', projectSchema);

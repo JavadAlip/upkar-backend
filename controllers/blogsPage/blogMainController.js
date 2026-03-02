@@ -8,7 +8,7 @@ export const createBlogMain = async (req, res) => {
     if (req.file) {
       const imgRes = await uploadImageToCloudinary(
         req.file.buffer,
-        'blog/main'
+        'blog/main',
       );
       data.mainImage = imgRes.secure_url;
     }
@@ -43,7 +43,7 @@ export const updateBlogMain = async (req, res) => {
     if (req.file) {
       const imgRes = await uploadImageToCloudinary(
         req.file.buffer,
-        'blog/main'
+        'blog/main',
       );
       data.mainImage = imgRes.secure_url;
     }

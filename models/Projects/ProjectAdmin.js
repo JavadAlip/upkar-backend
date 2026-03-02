@@ -6,14 +6,12 @@ const sectionSchema = new mongoose.Schema({
   sectionImage: { type: String },
 });
 
-// Master Plan Schema
 const masterPlanSchema = new mongoose.Schema({
   planName: { type: String },
   carpetArea: { type: String },
   planPhoto: { type: String },
 });
 
-// Project Schema
 const projectAdminSchema = new mongoose.Schema(
   {
     projectName: { type: String, required: true },
@@ -58,10 +56,7 @@ const projectAdminSchema = new mongoose.Schema(
       type: String,
     },
 
-    // Master Plans
     masterPlans: [masterPlanSchema],
-
-    // Sections
     sections: [sectionSchema],
 
     brochureImage: String,

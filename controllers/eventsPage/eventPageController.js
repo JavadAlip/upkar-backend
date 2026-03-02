@@ -14,7 +14,6 @@ export const createOrUpdateEventPage = async (req, res) => {
 
     let eventPage = await EventPage.findOne();
 
-    // ------------------ CREATE (First Time) ------------------
     if (!eventPage) {
       if (!req.files?.mainImage || !req.files?.subImage) {
         return res.status(400).json({
@@ -49,14 +48,11 @@ export const createOrUpdateEventPage = async (req, res) => {
       });
     }
 
-    // ------------------ UPDATE ------------------
-
     eventPage.mainTitle = mainTitle;
     eventPage.mainDescription = mainDescription;
     eventPage.subTitle = subTitle;
     eventPage.subDescription = subDescription;
 
-    // Only upload new main image if provided
     if (req.files?.mainImage) {
       const mainImgRes = await uploadImageToCloudinary(
         req.files.mainImage[0].buffer,
@@ -65,7 +61,6 @@ export const createOrUpdateEventPage = async (req, res) => {
       eventPage.mainImage = mainImgRes.secure_url;
     }
 
-    // Only upload new sub image if provided
     if (req.files?.subImage) {
       const subImgRes = await uploadImageToCloudinary(
         req.files.subImage[0].buffer,

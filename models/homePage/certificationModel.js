@@ -1,24 +1,3 @@
-// import mongoose from 'mongoose';
-
-// const certificationSchema = new mongoose.Schema(
-//   {
-//     heading: {
-//       type: String,
-//       required: true,
-//     },
-//     icon: {
-//       type: String,
-//       required: true,
-//     },
-//   },
-//   { timestamps: true }
-// );
-
-// const Certification =
-//   mongoose.models.Certification ||
-//   mongoose.model('Certification', certificationSchema);
-// export default Certification;
-
 import mongoose from 'mongoose';
 
 const certificationSchema = new mongoose.Schema(
@@ -28,7 +7,6 @@ const certificationSchema = new mongoose.Schema(
       required: true,
     },
     content: {
-      // ✅ NEW FIELD
       type: String,
       required: true,
     },
