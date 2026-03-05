@@ -3,24 +3,37 @@ import { uploadImageToCloudinary } from '../../config/cloudinaryUpload.js';
 
 export const createReadMore = async (req, res) => {
   try {
-    const { description } = req.body;
+    const { heading, description } = req.body;
+
+    if (!heading || !description) {
+      return res.status(400).json({
+        success: false,
+        message: 'Heading and description are required.',
+      });
+    }
 
     let mainImage = null;
+
     if (req.file) {
       const imgRes = await uploadImageToCloudinary(
         req.file.buffer,
-        'readmore/main'
+        'readmore/main',
       );
       mainImage = imgRes.secure_url;
     }
 
     if (!mainImage) {
-      return res
-        .status(400)
-        .json({ success: false, message: 'mainImage is required.' });
+      return res.status(400).json({
+        success: false,
+        message: 'mainImage is required.',
+      });
     }
 
-    const newReadMore = await ReadMore.create({ mainImage, description });
+    const newReadMore = await ReadMore.create({
+      heading,
+      mainImage,
+      description,
+    });
 
     res.status(201).json({
       success: true,
@@ -44,27 +57,34 @@ export const getAllReadMore = async (req, res) => {
 export const updateReadMore = async (req, res) => {
   try {
     const { id } = req.params;
-    const { description } = req.body;
+    const { heading, description } = req.body;
 
     let mainImage;
+
     if (req.file) {
       const imgRes = await uploadImageToCloudinary(
         req.file.buffer,
-        'readmore/main'
+        'readmore/main',
       );
       mainImage = imgRes.secure_url;
     }
 
     const updated = await ReadMore.findByIdAndUpdate(
       id,
-      { ...(mainImage && { mainImage }), description },
-      { new: true }
+      {
+        ...(heading && { heading }),
+        ...(mainImage && { mainImage }),
+        ...(description && { description }),
+      },
+      { new: true },
     );
 
-    if (!updated)
-      return res
-        .status(404)
-        .json({ success: false, message: 'ReadMore not found' });
+    if (!updated) {
+      return res.status(404).json({
+        success: false,
+        message: 'ReadMore not found',
+      });
+    }
 
     res.status(200).json({
       success: true,
