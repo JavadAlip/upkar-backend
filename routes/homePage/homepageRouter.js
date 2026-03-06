@@ -73,13 +73,21 @@ import {
 const router = express.Router();
 
 //banner
-router.post('/create-banner', AdminToken, upload.single('image'), createBanner);
+router.post(
+  '/create-banner',
+  AdminToken,
+  upload.array('images', 5),
+  createBanner,
+);
+
 router.get('/get-all-banners', getBanners);
+
 router.delete('/delete-banner/:id', AdminToken, deleteBanner);
+
 router.put(
   '/edit-banner/:id',
   AdminToken,
-  upload.single('image'),
+  upload.array('images', 5),
   updateBanner,
 );
 

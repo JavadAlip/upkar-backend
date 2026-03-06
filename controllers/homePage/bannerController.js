@@ -5,16 +5,27 @@ export const createBanner = async (req, res) => {
   try {
     const { title, subtitle } = req.body;
 
-    if (!title || !req.file) {
-      return res.status(400).json({ message: 'Title and image are required' });
+    if (!title || !req.files || req.files.length === 0) {
+      return res
+        .status(400)
+        .json({ message: 'Title and at least one image required' });
     }
 
-    const result = await uploadImageToCloudinary(req.file.buffer, 'banners');
+    if (req.files.length > 5) {
+      return res.status(400).json({ message: 'Maximum 5 images allowed' });
+    }
+
+    const uploadedImages = [];
+
+    for (const file of req.files) {
+      const result = await uploadImageToCloudinary(file.buffer, 'banners');
+      uploadedImages.push(result.secure_url);
+    }
 
     const banner = await Banner.create({
       title,
       subtitle,
-      image: result.secure_url,
+      images: uploadedImages,
     });
 
     res.status(201).json({
@@ -42,13 +53,20 @@ export const updateBanner = async (req, res) => {
     const { title, subtitle } = req.body;
 
     const banner = await Banner.findById(id);
+
     if (!banner) {
       return res.status(404).json({ message: 'Banner not found' });
     }
 
-    if (req.file) {
-      const result = await uploadImageToCloudinary(req.file.buffer, 'banners');
-      banner.image = result.secure_url;
+    if (req.files && req.files.length > 0) {
+      const uploadedImages = [];
+
+      for (const file of req.files) {
+        const result = await uploadImageToCloudinary(file.buffer, 'banners');
+        uploadedImages.push(result.secure_url);
+      }
+
+      banner.images = uploadedImages;
     }
 
     if (title) banner.title = title;
