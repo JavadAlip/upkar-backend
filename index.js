@@ -87,7 +87,7 @@ import { createAdminOnce } from './controllers/adminController.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.get('/ping', (req, res) => {
+app.get('/health', (req, res) => {
   res.json({ message: 'Server is alive' });
 });
 
