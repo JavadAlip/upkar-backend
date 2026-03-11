@@ -84,10 +84,9 @@ import categoriesRoutes from './routes/categories/categoriesRouter.js';
 import contactRoutes from './routes/contactPage/contactRouter.js';
 import { createAdminOnce } from './controllers/adminController.js';
 
-const app = express(); // ✅ create app first
+const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ✅ ping route AFTER app initialization
 app.get('/ping', (req, res) => {
   res.json({ message: 'Server is alive' });
 });
