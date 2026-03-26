@@ -131,9 +131,13 @@ router.post('/send-investment-email', async (req, res) => {
     await transporter.sendMail(mailOptions);
 
     res.status(200).json({ success: true });
+    // } catch (error) {
+    //   console.error('Nodemailer Error:', error);
+    //   res.status(500).json({ error: 'Failed to send email' });
+    // }
   } catch (error) {
-    console.error('Nodemailer Error:', error);
-    res.status(500).json({ error: 'Failed to send email' });
+    console.error('Nodemailer Error FULL:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
