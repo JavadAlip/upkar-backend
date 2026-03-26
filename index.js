@@ -83,6 +83,8 @@ import projectsRoutes from './routes/projects/projectRoutes.js';
 import categoriesRoutes from './routes/categories/categoriesRouter.js';
 import contactRoutes from './routes/contactPage/contactRouter.js';
 import { createAdminOnce } from './controllers/adminController.js';
+import emailRoute from './routes/sendInvestmentEmail.js';
+import contactRoute from './routes/sendContactEmail.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -115,6 +117,8 @@ app.use('/api/blogspage', blogsRoutes);
 app.use('/api/projects', projectsRoutes);
 app.use('/api/contactpage', contactRoutes);
 app.use('/api/categories', categoriesRoutes);
+app.use('/api', emailRoute);
+app.use('/api/contact', contactRoute);
 
 mongoose
   .connect(process.env.MONGO_URI, {
