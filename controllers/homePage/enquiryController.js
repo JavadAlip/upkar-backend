@@ -1,10 +1,77 @@
+import axios from 'axios';
 import Enquiry from '../../models/homePage/enquiryModel.js';
 import Project from '../../models/Projects/ProjectAdmin.js';
+
+// CREATE
+// export const createEnquiry = async (req, res) => {
+//   try {
+//     console.log('BODY:', req.body);
+//     const {
+//       projectStatus,
+//       projectId,
+//       siteVisitDate,
+//       location,
+//       name,
+//       email,
+//       phone,
+//       isExistingCustomer,
+//     } = req.body;
+
+//     if (
+//       !projectStatus ||
+//       !projectId ||
+//       !siteVisitDate ||
+//       !location ||
+//       !name ||
+//       !email ||
+//       !phone ||
+//       !isExistingCustomer
+//     ) {
+//       return res.status(400).json({
+//         message: 'All fields are required',
+//       });
+//     }
+
+//     const project = await Project.findById(projectId);
+//     if (!project) {
+//       return res.status(404).json({
+//         message: 'Project not found',
+//       });
+//     }
+
+//     if (project.projectStatus !== projectStatus) {
+//       return res.status(400).json({
+//         message: 'Project status does not match selected project',
+//       });
+//     }
+
+//     const newEnquiry = await Enquiry.create({
+//       projectStatus,
+//       projectId,
+//       projectName: project.projectName,
+//       siteVisitDate,
+//       location,
+//       name,
+//       email,
+//       phone,
+//       isExistingCustomer,
+//     });
+
+//     res.status(201).json({
+//       message: 'Enquiry submitted successfully',
+//       enquiry: newEnquiry,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 
 // CREATE
 export const createEnquiry = async (req, res) => {
   try {
     console.log('BODY:', req.body);
+
     const {
       projectStatus,
       projectId,
@@ -44,6 +111,7 @@ export const createEnquiry = async (req, res) => {
       });
     }
 
+    //  Save in DB
     const newEnquiry = await Enquiry.create({
       projectStatus,
       projectId,
@@ -55,6 +123,40 @@ export const createEnquiry = async (req, res) => {
       phone,
       isExistingCustomer,
     });
+
+    //  SEND TO SELL.DO CRM
+    try {
+      const response = await axios.post(
+        'https://app.sell.do/api/leads/create',
+        null,
+        {
+          params: {
+            api_key: process.env.SELLDO_API_KEY,
+
+            'sell_do[form][lead][name]': name,
+            'sell_do[form][lead][email]': email,
+            'sell_do[form][lead][phone]': phone,
+
+            'sell_do[form][note][content]': `
+Project: ${project.projectName}
+Project Status: ${projectStatus}
+Site Visit Date: ${siteVisitDate}
+Location: ${location}
+Customer Type: ${isExistingCustomer}
+        `,
+
+            'sell_do[campaign][srd]': `${project.projectName}_Website_GetInTouch`,
+          },
+        },
+      );
+
+      //  ADD THIS LINE
+      console.log('SELLDO RESPONSE:', response.data);
+
+      console.log(' Lead sent to Sell.Do');
+    } catch (sellDoError) {
+      console.error(' Sell.Do Error:', sellDoError.message);
+    }
 
     res.status(201).json({
       message: 'Enquiry submitted successfully',
