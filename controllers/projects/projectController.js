@@ -61,6 +61,15 @@ export const createProject = async (req, res) => {
       sectionsData,
     } = req.body;
 
+    let parsedAboutProject = null;
+    if (aboutProject) {
+      try {
+        parsedAboutProject = JSON.parse(aboutProject);
+      } catch {
+        parsedAboutProject = { mainDescription: aboutProject }; // fallback for old plain-text
+      }
+    }
+
     if (!projectName || !projectType || !projectStatus || !location) {
       return res.status(400).json({
         success: false,
@@ -164,7 +173,8 @@ export const createProject = async (req, res) => {
       ...(totalUnitsNum !== undefined && { totalUnits: totalUnitsNum }),
       keyFeatures: parseArrayField(keyFeatures),
       amenities: parseArrayField(amenities),
-      aboutProject,
+      // aboutProject,
+      aboutProject: parsedAboutProject,
       reraDescription,
       noBrokerReraId,
       builderProjectReraId,
@@ -212,10 +222,18 @@ export const updateProject = async (req, res) => {
       locationEmbedUrl,
       masterPlansData,
       sectionsData,
+      aboutProject,
       ...rest
     } = req.body;
 
     Object.assign(project, rest);
+    if (aboutProject) {
+      try {
+        project.aboutProject = JSON.parse(aboutProject);
+      } catch {
+        project.aboutProject = { mainDescription: aboutProject };
+      }
+    }
 
     if (locationEmbedUrl !== undefined) {
       project.locationEmbedUrl = cleanEmbedUrl(locationEmbedUrl);
@@ -238,6 +256,13 @@ export const updateProject = async (req, res) => {
     if (amenities) project.amenities = parseArrayField(amenities);
 
     // ==================== PROPERTY IMAGES ====================
+
+    if (req.body.removedPropertyImages) {
+      const toRemove = JSON.parse(req.body.removedPropertyImages);
+      project.propertyImages = project.propertyImages.filter(
+        (url) => !toRemove.includes(url),
+      );
+    }
 
     if (req.files?.propertyImages?.length) {
       for (const file of req.files.propertyImages) {

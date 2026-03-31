@@ -62,7 +62,11 @@ const projectAdminSchema = new mongoose.Schema(
     brochureImage: String,
     keyFeatures: [{ type: String }],
     amenities: [{ type: String }],
-    aboutProject: String,
+    // aboutProject: String,
+    aboutProject: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
     reraDescription: String,
     noBrokerReraId: String,
     builderProjectReraId: String,
