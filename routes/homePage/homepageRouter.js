@@ -76,7 +76,7 @@ const router = express.Router();
 router.post(
   '/create-banner',
   AdminToken,
-  upload.array('images', 5),
+  upload.array('images', 10),
   createBanner,
 );
 
@@ -87,7 +87,7 @@ router.delete('/delete-banner/:id', AdminToken, deleteBanner);
 router.put(
   '/edit-banner/:id',
   AdminToken,
-  upload.array('images', 5),
+  upload.array('images', 10),
   updateBanner,
 );
 

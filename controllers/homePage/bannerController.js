@@ -11,7 +11,7 @@ export const createBanner = async (req, res) => {
         .json({ message: 'Title and at least one image required' });
     }
 
-    if (req.files.length > 5) {
+    if (req.files.length > 10) {
       return res.status(400).json({ message: 'Maximum 5 images allowed' });
     }
 
@@ -47,37 +47,82 @@ export const getBanners = async (req, res) => {
   }
 };
 
+// export const updateBanner = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { title, subtitle } = req.body;
+
+//     const banner = await Banner.findById(id);
+
+//     if (!banner) {
+//       return res.status(404).json({ message: 'Banner not found' });
+//     }
+
+//     if (req.files && req.files.length > 0) {
+//       const uploadedImages = [];
+
+//       for (const file of req.files) {
+//         const result = await uploadImageToCloudinary(file.buffer, 'banners');
+//         uploadedImages.push(result.secure_url);
+//       }
+
+//       banner.images = uploadedImages;
+//     }
+
+//     if (title) banner.title = title;
+//     if (subtitle) banner.subtitle = subtitle;
+
+//     await banner.save();
+
+//     res.status(200).json({
+//       message: 'Banner updated successfully',
+//       banner,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 export const updateBanner = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, subtitle } = req.body;
+    const { title, subtitle, removeImages } = req.body; // 👈 add removeImages
 
     const banner = await Banner.findById(id);
-
     if (!banner) {
       return res.status(404).json({ message: 'Banner not found' });
     }
 
+    // Handle removal of existing images
+    if (removeImages) {
+      const toRemove = Array.isArray(removeImages)
+        ? removeImages
+        : [removeImages];
+      banner.images = banner.images.filter((img) => !toRemove.includes(img));
+    }
+
+    // Upload and append new images
     if (req.files && req.files.length > 0) {
       const uploadedImages = [];
-
       for (const file of req.files) {
         const result = await uploadImageToCloudinary(file.buffer, 'banners');
         uploadedImages.push(result.secure_url);
       }
 
-      banner.images = uploadedImages;
+      // Combine kept + new, enforce max 10
+      const combined = [...banner.images, ...uploadedImages];
+      if (combined.length > 10) {
+        return res.status(400).json({ message: 'Maximum 10 images allowed' });
+      }
+      banner.images = combined;
     }
 
     if (title) banner.title = title;
     if (subtitle) banner.subtitle = subtitle;
 
     await banner.save();
-
-    res.status(200).json({
-      message: 'Banner updated successfully',
-      banner,
-    });
+    res.status(200).json({ message: 'Banner updated successfully', banner });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
