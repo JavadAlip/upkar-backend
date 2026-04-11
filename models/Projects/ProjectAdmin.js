@@ -56,6 +56,10 @@ const projectAdminSchema = new mongoose.Schema(
       type: String,
     },
 
+    isVisible: {
+      type: Boolean,
+      default: true,
+    },
     masterPlans: [masterPlanSchema],
     sections: [sectionSchema],
 

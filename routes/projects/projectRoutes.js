@@ -7,6 +7,7 @@ import {
   getProjectById,
   updateProject,
   deleteProject,
+  updateProjectVisibility,
 } from '../../controllers/projects/projectController.js';
 
 const router = express.Router();
@@ -37,6 +38,7 @@ router.put(
   ]),
   updateProject,
 );
+router.patch('/update-visibility/:id', updateProjectVisibility);
 
 router.delete('/delete-project/:id', AdminToken, deleteProject);
 

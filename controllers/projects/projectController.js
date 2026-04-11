@@ -397,3 +397,17 @@ export const deleteProject = async (req, res) => {
     return res.status(500).json({ success: false, message: err.message });
   }
 };
+
+export const updateProjectVisibility = async (req, res) => {
+  try {
+    const { isVisible } = req.body;
+    const project = await ProjectAdmin.findByIdAndUpdate(
+      req.params.id,
+      { isVisible },
+      { new: true },
+    );
+    res.json({ success: true, project });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
