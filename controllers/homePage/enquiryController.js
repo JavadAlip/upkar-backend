@@ -1,11 +1,77 @@
-import axios from 'axios';
-import Enquiry from '../../models/homePage/enquiryModel.js';
-import Project from '../../models/Projects/ProjectAdmin.js';
+// import axios from 'axios';
+// import Enquiry from '../../models/homePage/enquiryModel.js';
+// import Project from '../../models/Projects/ProjectAdmin.js';
 
-// CREATE
+// // CREATE
+// // export const createEnquiry = async (req, res) => {
+// //   try {
+// //     console.log('BODY:', req.body);
+// //     const {
+// //       projectStatus,
+// //       projectId,
+// //       siteVisitDate,
+// //       location,
+// //       name,
+// //       email,
+// //       phone,
+// //       isExistingCustomer,
+// //     } = req.body;
+
+// //     if (
+// //       !projectStatus ||
+// //       !projectId ||
+// //       !siteVisitDate ||
+// //       !location ||
+// //       !name ||
+// //       !email ||
+// //       !phone ||
+// //       !isExistingCustomer
+// //     ) {
+// //       return res.status(400).json({
+// //         message: 'All fields are required',
+// //       });
+// //     }
+
+// //     const project = await Project.findById(projectId);
+// //     if (!project) {
+// //       return res.status(404).json({
+// //         message: 'Project not found',
+// //       });
+// //     }
+
+// //     if (project.projectStatus !== projectStatus) {
+// //       return res.status(400).json({
+// //         message: 'Project status does not match selected project',
+// //       });
+// //     }
+
+// //     const newEnquiry = await Enquiry.create({
+// //       projectStatus,
+// //       projectId,
+// //       projectName: project.projectName,
+// //       siteVisitDate,
+// //       location,
+// //       name,
+// //       email,
+// //       phone,
+// //       isExistingCustomer,
+// //     });
+
+// //     res.status(201).json({
+// //       message: 'Enquiry submitted successfully',
+// //       enquiry: newEnquiry,
+// //     });
+// //   } catch (error) {
+// //     console.error(error);
+// //     res.status(500).json({ message: error.message });
+// //   }
+// // };
+
+// // CREATE
 // export const createEnquiry = async (req, res) => {
 //   try {
 //     console.log('BODY:', req.body);
+
 //     const {
 //       projectStatus,
 //       projectId,
@@ -18,14 +84,14 @@ import Project from '../../models/Projects/ProjectAdmin.js';
 //     } = req.body;
 
 //     if (
-//       !projectStatus ||
-//       !projectId ||
-//       !siteVisitDate ||
-//       !location ||
+//       // !projectStatus ||
+//       // !projectId ||
+//       // !siteVisitDate ||
+//       // !location ||
+//       // !isExistingCustomer ||
 //       !name ||
 //       !email ||
-//       !phone ||
-//       !isExistingCustomer
+//       !phone
 //     ) {
 //       return res.status(400).json({
 //         message: 'All fields are required',
@@ -45,6 +111,7 @@ import Project from '../../models/Projects/ProjectAdmin.js';
 //       });
 //     }
 
+//     //  Save in DB
 //     const newEnquiry = await Enquiry.create({
 //       projectStatus,
 //       projectId,
@@ -57,6 +124,40 @@ import Project from '../../models/Projects/ProjectAdmin.js';
 //       isExistingCustomer,
 //     });
 
+//     //  SEND TO SELL.DO CRM
+//     try {
+//       const response = await axios.post(
+//         'https://app.sell.do/api/leads/create',
+//         null,
+//         {
+//           params: {
+//             api_key: process.env.SELLDO_API_KEY,
+
+//             'sell_do[form][lead][name]': name,
+//             'sell_do[form][lead][email]': email,
+//             'sell_do[form][lead][phone]': phone,
+
+//             'sell_do[form][note][content]': `
+// Project: ${project.projectName}
+// Project Status: ${projectStatus}
+// Site Visit Date: ${siteVisitDate}
+// Location: ${location}
+// Customer Type: ${isExistingCustomer}
+//         `,
+
+//             'sell_do[campaign][srd]': `${project.projectName}_Website_GetInTouch`,
+//           },
+//         },
+//       );
+
+//       //  ADD THIS LINE
+//       console.log('SELLDO RESPONSE:', response.data);
+
+//       console.log(' Lead sent to Sell.Do');
+//     } catch (sellDoError) {
+//       console.error(' Sell.Do Error:', sellDoError.message);
+//     }
+
 //     res.status(201).json({
 //       message: 'Enquiry submitted successfully',
 //       enquiry: newEnquiry,
@@ -66,6 +167,45 @@ import Project from '../../models/Projects/ProjectAdmin.js';
 //     res.status(500).json({ message: error.message });
 //   }
 // };
+
+// // GET ALL
+// export const getAllEnquiries = async (req, res) => {
+//   try {
+//     const enquiries = await Enquiry.find()
+//       .populate('projectId', 'projectName projectStatus')
+//       .sort({ createdAt: -1 });
+
+//     res.status(200).json(enquiries);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
+// // DELETE
+// export const deleteEnquiry = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     const enquiry = await Enquiry.findById(id);
+//     if (!enquiry) {
+//       return res.status(404).json({ message: 'Enquiry not found' });
+//     }
+
+//     await enquiry.deleteOne();
+
+//     res.status(200).json({
+//       message: 'Enquiry deleted successfully',
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
+import axios from 'axios';
+import Enquiry from '../../models/homePage/enquiryModel.js';
+import Project from '../../models/Projects/ProjectAdmin.js';
 
 // CREATE
 export const createEnquiry = async (req, res) => {
@@ -83,39 +223,33 @@ export const createEnquiry = async (req, res) => {
       isExistingCustomer,
     } = req.body;
 
-    if (
-      !projectStatus ||
-      !projectId ||
-      !siteVisitDate ||
-      !location ||
-      !name ||
-      !email ||
-      !phone ||
-      !isExistingCustomer
-    ) {
+    if (!name || !email || !phone) {
       return res.status(400).json({
         message: 'All fields are required',
       });
     }
 
-    const project = await Project.findById(projectId);
-    if (!project) {
-      return res.status(404).json({
-        message: 'Project not found',
-      });
+    // Only fetch project if projectId is provided
+    let project = null;
+    if (projectId) {
+      project = await Project.findById(projectId);
+      if (!project) {
+        return res.status(404).json({
+          message: 'Project not found',
+        });
+      }
+      if (project.projectStatus !== projectStatus) {
+        return res.status(400).json({
+          message: 'Project status does not match selected project',
+        });
+      }
     }
 
-    if (project.projectStatus !== projectStatus) {
-      return res.status(400).json({
-        message: 'Project status does not match selected project',
-      });
-    }
-
-    //  Save in DB
+    // Save in DB
     const newEnquiry = await Enquiry.create({
       projectStatus,
-      projectId,
-      projectName: project.projectName,
+      projectId: projectId || null,
+      projectName: project?.projectName || '',
       siteVisitDate,
       location,
       name,
@@ -124,7 +258,7 @@ export const createEnquiry = async (req, res) => {
       isExistingCustomer,
     });
 
-    //  SEND TO SELL.DO CRM
+    // SEND TO SELL.DO CRM
     try {
       const response = await axios.post(
         'https://app.sell.do/api/leads/create',
@@ -138,24 +272,22 @@ export const createEnquiry = async (req, res) => {
             'sell_do[form][lead][phone]': phone,
 
             'sell_do[form][note][content]': `
-Project: ${project.projectName}
-Project Status: ${projectStatus}
-Site Visit Date: ${siteVisitDate}
-Location: ${location}
-Customer Type: ${isExistingCustomer}
-        `,
+Project: ${project?.projectName || ''}
+Project Status: ${projectStatus || ''}
+Site Visit Date: ${siteVisitDate || ''}
+Location: ${location || ''}
+Customer Type: ${isExistingCustomer || ''}
+            `,
 
-            'sell_do[campaign][srd]': `${project.projectName}_Website_GetInTouch`,
+            'sell_do[campaign][srd]': `${project?.projectName || 'Brochure'}_Website_GetInTouch`,
           },
         },
       );
 
-      //  ADD THIS LINE
       console.log('SELLDO RESPONSE:', response.data);
-
-      console.log(' Lead sent to Sell.Do');
+      console.log('Lead sent to Sell.Do');
     } catch (sellDoError) {
-      console.error(' Sell.Do Error:', sellDoError.message);
+      console.error('Sell.Do Error:', sellDoError.message);
     }
 
     res.status(201).json({
